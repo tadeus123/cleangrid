@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react'
-import { CTAButtons } from './CTAButtons'
 import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
-import { formatMoney, parseMoneyInput, BENCHMARK_PER_1000_SQM } from '../lib/currency'
+import { formatMoney, parseMoneyInput } from '../lib/currency'
 import { submitLead } from '../lib/submitLead'
-import { EligibilityBanner } from './EligibilityBanner'
 import { PrivacyMicro } from './PrivacyMicro'
 import { MIN_MONTHLY_BILL } from '../constants/eligibility'
 
@@ -17,7 +15,6 @@ export function SavingsCalculator() {
   const [inputValue, setInputValue] = useState('50000')
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
-  const [buildingType, setBuildingType] = useState('')
   const [leadStatus, setLeadStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [leadMessage, setLeadMessage] = useState('')
 
@@ -36,8 +33,6 @@ export function SavingsCalculator() {
     setInputValue(String(clamped))
   }
 
-  const belowMinimum = monthly < MIN_MONTHLY_BILL[currency]
-
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !company) return
@@ -46,155 +41,113 @@ export function SavingsCalculator() {
       type: 'calculator',
       email,
       company,
-      buildingType: buildingType || undefined,
       monthlyBill: monthly,
       currency,
-      message: `Calculator lead — CleanGrid est. ${formatMoney(cleanGrid, currency)}/mo, saves ${formatMoney(yearlySave, currency)}/yr`,
+      message: `CleanGrid ${formatMoney(cleanGrid, currency)}/mo · save ${formatMoney(yearlySave, currency)}/yr`,
     })
     setLeadStatus(result.ok ? 'done' : 'error')
     setLeadMessage(result.message)
   }
 
   return (
-    <section id="calculator" className="section-anchor border-y border-white/5 bg-graphite-light py-20">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-white">
-              Calculate your savings in 10 seconds
-            </h2>
-            <p className="mt-4 text-slate-muted">
-              Enter what you pay for cleaning today. CleanGrid is{' '}
-              <strong className="text-white">10% of that number</strong> — you keep 90%.
-            </p>
-            <EligibilityBanner className="mt-4" dark />
-            <p className="mt-4 text-sm text-slate-muted">
-              <strong className="text-white">No invoice yet?</strong> Benchmark is{' '}
-              {formatMoney(BENCHMARK_PER_1000_SQM[currency], currency)} per 1,000 m²{' '}
-              <em>per cleaning visit</em> (not per month). ~20 visits/month ≈ monthly benchmark varies
-              by schedule — site scan confirms.
-            </p>
+    <section id="calculator" className="section-anchor border-y border-white/5 bg-graphite-light py-20 md:py-24">
+      <div className="mx-auto max-w-3xl px-6">
+        <h2 className="text-center text-3xl font-bold tracking-tight text-white md:text-4xl">
+          Your CleanGrid price = 10% of this number
+        </h2>
+
+        <div className="mt-10 rounded-xl border border-white/10 bg-graphite p-8 report-glow">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <label htmlFor="monthly-cost" className="text-sm font-medium text-white">
+              Current monthly cleaning bill
+            </label>
+            <CurrencySelect />
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-graphite p-8 report-glow">
-            <div className="mb-6 flex items-center justify-between gap-4">
-              <label htmlFor="monthly-cost" className="text-sm font-medium text-slate-muted">
-                Current monthly cleaning bill
-              </label>
-              <CurrencySelect />
-            </div>
+          <input
+            id="monthly-cost"
+            type="number"
+            min={SLIDER_MIN}
+            max={SLIDER_MAX}
+            step={500}
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value)
+              syncMonthly(parseMoneyInput(e.target.value))
+            }}
+            className="w-full rounded-md border border-white/15 bg-graphite-light px-4 py-3 text-3xl font-bold text-white"
+          />
 
-            <input
-              id="monthly-cost"
-              type="number"
-              min={SLIDER_MIN}
-              max={SLIDER_MAX}
-              step={500}
-              value={inputValue}
-              onChange={(e) => {
-                setInputValue(e.target.value)
-                syncMonthly(parseMoneyInput(e.target.value))
-              }}
-              className="w-full rounded-md border border-white/15 bg-graphite-light px-4 py-3 text-2xl font-bold text-white"
-            />
-
-            <input
-              type="range"
-              min={SLIDER_MIN}
-              max={SLIDER_MAX}
-              step={5000}
-              value={monthly}
-              onChange={(e) => syncMonthly(Number(e.target.value))}
-              className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10"
-              aria-label="Adjust monthly cleaning bill"
-              aria-valuemin={SLIDER_MIN}
-              aria-valuemax={SLIDER_MAX}
-              aria-valuenow={monthly}
-            />
-            <div className="mt-1 flex justify-between text-xs text-slate-muted">
-              <span>{formatMoney(SLIDER_MIN, currency)}/mo</span>
-              <span>{formatMoney(SLIDER_MAX, currency)}/mo</span>
-            </div>
-            {belowMinimum && (
-              <p className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-                Typical CleanGrid sites spend at least {formatMoney(MIN_MONTHLY_BILL[currency], currency)}
-                /month on cleaning. Contact us if you are close — we may still fit pilot criteria.
-              </p>
-            )}
-
-            <div className="mt-8 space-y-4 border-t border-white/10 pt-8">
-              <div className="flex justify-between gap-4">
-                <span className="text-slate-muted">CleanGrid estimated price</span>
-                <span className="text-xl font-semibold text-accent">
-                  {formatMoney(cleanGrid, currency)}/mo
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-muted">You save per month (90%)</span>
-                <span className="font-semibold text-white">{formatMoney(monthlySave, currency)}</span>
-              </div>
-              <div className="flex justify-between rounded-lg bg-accent/10 px-4 py-3">
-                <span className="font-medium text-white">Estimated yearly savings</span>
-                <span className="text-xl font-bold text-accent">{formatMoney(yearlySave, currency)}</span>
-              </div>
-              <div className="rounded-lg border border-white/10 px-4 py-3 text-xs text-slate-muted">
-                <strong className="text-white">Performance target (contract):</strong> 2× agreed
-                cleanliness standard · cleaning completed in ~50% of today&apos;s window · night service
-                standard
-              </div>
-            </div>
-
-            <form onSubmit={handleLeadSubmit} className="mt-8 space-y-3 border-t border-white/10 pt-8">
-              <p className="text-sm font-medium text-white">Email me this estimate</p>
-              <input
-                type="email"
-                required
-                placeholder="Work email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white placeholder:text-slate-muted"
-              />
-              <input
-                type="text"
-                required
-                placeholder="Company / building name"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                className="w-full rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white placeholder:text-slate-muted"
-              />
-              <select
-                value={buildingType}
-                onChange={(e) => setBuildingType(e.target.value)}
-                className="w-full rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white"
-              >
-                <option value="">Building type (optional)</option>
-                <option value="office">Office</option>
-                <option value="school">School / university</option>
-                <option value="factory">Factory / industrial</option>
-                <option value="hotel">Hotel</option>
-                <option value="warehouse">Warehouse</option>
-                <option value="hospital">Hospital / healthcare</option>
-                <option value="airport">Airport / transport</option>
-                <option value="other">Other</option>
-              </select>
-              <button
-                type="submit"
-                disabled={leadStatus === 'loading'}
-                className="w-full rounded-md bg-accent py-3 text-sm font-semibold text-graphite disabled:opacity-60"
-              >
-                {leadStatus === 'loading' ? 'Sending…' : 'Send estimate to my inbox'}
-              </button>
-              {leadMessage && (
-                <p className={`text-sm ${leadStatus === 'error' ? 'text-red-400' : 'text-accent'}`}>
-                  {leadMessage}
-                </p>
-              )}
-              <PrivacyMicro dark />
-            </form>
-
-            <CTAButtons className="mt-6" primary="upload" />
+          <input
+            type="range"
+            min={SLIDER_MIN}
+            max={SLIDER_MAX}
+            step={5000}
+            value={monthly}
+            onChange={(e) => syncMonthly(Number(e.target.value))}
+            className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10"
+            aria-label="Adjust monthly cleaning bill"
+          />
+          <div className="mt-1 flex justify-between text-xs text-slate-muted">
+            <span>{formatMoney(SLIDER_MIN, currency)}</span>
+            <span>{formatMoney(SLIDER_MAX, currency)}</span>
           </div>
+
+          <div className="mt-8 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-3">
+            <div>
+              <p className="text-xs text-slate-muted">CleanGrid</p>
+              <p className="text-2xl font-bold text-accent">{formatMoney(cleanGrid, currency)}/mo</p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-muted">You save / month</p>
+              <p className="text-2xl font-bold text-white">{formatMoney(monthlySave, currency)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-muted">You save / year</p>
+              <p className="text-2xl font-bold text-white">{formatMoney(yearlySave, currency)}</p>
+            </div>
+          </div>
+
+          {monthly < MIN_MONTHLY_BILL[currency] && (
+            <p className="mt-4 text-xs text-amber-300/90">
+              Typical sites spend {formatMoney(MIN_MONTHLY_BILL[currency], currency)}+/month — contact us if
+              you&apos;re close.
+            </p>
+          )}
+
+          <form onSubmit={handleLeadSubmit} className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row">
+            <input
+              type="email"
+              required
+              placeholder="Work email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-1 rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white"
+            />
+            <input
+              type="text"
+              required
+              placeholder="Company"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              className="flex-1 rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white"
+            />
+            <button
+              type="submit"
+              disabled={leadStatus === 'loading'}
+              className="rounded-md bg-accent px-6 py-2.5 text-sm font-semibold text-graphite disabled:opacity-60"
+            >
+              {leadStatus === 'loading' ? '…' : 'Email estimate'}
+            </button>
+          </form>
+          {leadMessage && (
+            <p className={`mt-3 text-sm ${leadStatus === 'error' ? 'text-red-400' : 'text-accent'}`}>
+              {leadMessage}
+            </p>
+          )}
+          <PrivacyMicro dark />
         </div>
+
       </div>
     </section>
   )

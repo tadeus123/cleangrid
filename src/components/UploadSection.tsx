@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { CTAButtons } from './CTAButtons'
 import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, parseMoneyInput } from '../lib/currency'
 import { fileToBase64, submitLead } from '../lib/submitLead'
-import { EligibilityBanner } from './EligibilityBanner'
 import { PrivacyMicro } from './PrivacyMicro'
 
 const BUILDING_TYPES = [
@@ -96,13 +94,8 @@ export function UploadSection() {
   return (
     <section id="upload" className="section-anchor border-t border-white/5 bg-graphite py-24 pb-32 md:pb-24">
       <div className="mx-auto max-w-2xl px-6">
-        <h2 className="text-center text-3xl font-bold tracking-tight text-white md:text-4xl">
-          Pay 10% of today&apos;s cleaning bill. Save 90%.
-        </h2>
-        <p className="mt-6 text-center text-lg text-slate-muted">
-          We don&apos;t sell robots. We sell cleaner buildings for less — fully managed.
-        </p>
-        <EligibilityBanner className="mt-4 text-center" dark />
+        <h2 className="text-center text-3xl font-bold text-white">Upload your cleaning bill</h2>
+        <p className="mt-3 text-center text-slate-muted">We reply within 1 business day with your 10% price.</p>
 
         <div className="mt-8 flex justify-center gap-2 text-xs text-slate-muted">
           {['Contact', 'Building', 'Bill & file'].map((label, i) => (
@@ -121,7 +114,7 @@ export function UploadSection() {
         >
           {step === 1 && (
             <div className="space-y-4">
-              <p className="text-sm font-medium text-white">Step 1 — Your details</p>
+              <p className="text-sm font-medium text-white">Your details</p>
               <input
                 type="text"
                 required
@@ -165,7 +158,7 @@ export function UploadSection() {
 
           {step === 2 && (
             <div className="space-y-4">
-              <p className="text-sm font-medium text-white">Step 2 — Building</p>
+              <p className="text-sm font-medium text-white">Building</p>
               <select
                 required
                 value={buildingType}
@@ -221,7 +214,7 @@ export function UploadSection() {
 
           {step === 3 && (
             <div className="space-y-4">
-              <p className="text-sm font-medium text-white">Step 3 — Current cleaning spend</p>
+              <p className="text-sm font-medium text-white">Bill & file</p>
               <div className="flex gap-3">
                 <input
                   type="number"
@@ -285,7 +278,6 @@ export function UploadSection() {
           . Response within 1 business day.
         </p>
 
-        <CTAButtons className="mt-8 justify-center" primary="calculate" />
       </div>
     </section>
   )

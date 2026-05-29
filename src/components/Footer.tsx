@@ -5,11 +5,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-3">
           <div>
             <p className="text-lg font-semibold text-white">CleanGrid</p>
-            <p className="mt-2 text-sm text-slate-muted">
-              The robotic cleanliness layer for large buildings.
-              <br />
-              Cleaner buildings. Lower costs. Fully operated by us.
-            </p>
+            <p className="mt-2 text-sm text-slate-muted">Fully managed robotic cleaning for large buildings.</p>
           </div>
           <div>
             <p className="text-sm font-medium text-white">Contact</p>
@@ -42,11 +38,6 @@ export function Footer() {
               <li>
                 <a href="#upload" className="hover:text-accent">
                   Upload bill
-                </a>
-              </li>
-              <li>
-                <a href="#site-scan" className="hover:text-accent">
-                  Book site scan
                 </a>
               </li>
               <li>

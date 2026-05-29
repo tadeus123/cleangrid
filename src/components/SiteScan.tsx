@@ -1,15 +1,11 @@
 import { useState } from 'react'
 import { submitLead } from '../lib/submitLead'
-import { EligibilityBanner } from './EligibilityBanner'
 import { PrivacyMicro } from './PrivacyMicro'
 
 export function SiteScan() {
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
   const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [country, setCountry] = useState('')
-  const [message, setMessage] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [feedback, setFeedback] = useState('')
 
@@ -21,28 +17,22 @@ export function SiteScan() {
       email,
       company,
       name,
-      phone: phone || undefined,
-      country: country || undefined,
-      message: message || 'Site scan request',
+      message: 'Site scan request',
     })
     setStatus(result.ok ? 'done' : 'error')
     setFeedback(result.message)
   }
 
   return (
-    <section id="site-scan" className="section-anchor bg-gray-50 py-20">
-      <div className="mx-auto max-w-xl px-6">
-        <h2 className="text-center text-3xl font-bold tracking-tight text-graphite">Book a site scan</h2>
-        <p className="mt-4 text-center text-slate-muted">
-          On-site or remote walkthrough. We map zones, access, schedule, and return a written CleanGrid
-          offer within 1 business day.
-        </p>
-        <EligibilityBanner className="mt-4 text-center" />
-        <form onSubmit={handleSubmit} className="mt-10 space-y-4 rounded-xl border border-gray-200 bg-white p-8">
+    <section id="site-scan" className="section-anchor bg-gray-50 py-16">
+      <div className="mx-auto max-w-md px-6">
+        <h2 className="text-center text-2xl font-bold text-graphite">Book a site scan</h2>
+        <p className="mt-2 text-center text-sm text-slate-muted">Written quote within 1 business day.</p>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-3">
           <input
             type="text"
             required
-            placeholder="Your name"
+            placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-md border border-gray-200 px-4 py-2.5 text-sm"
@@ -63,40 +53,15 @@ export function SiteScan() {
             onChange={(e) => setCompany(e.target.value)}
             className="w-full rounded-md border border-gray-200 px-4 py-2.5 text-sm"
           />
-          <input
-            type="tel"
-            placeholder="Phone (optional)"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full rounded-md border border-gray-200 px-4 py-2.5 text-sm"
-          />
-          <input
-            type="text"
-            placeholder="Country / city"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="w-full rounded-md border border-gray-200 px-4 py-2.5 text-sm"
-          />
-          <textarea
-            placeholder="Building size, type, or questions (optional)"
-            rows={3}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="w-full rounded-md border border-gray-200 px-4 py-2.5 text-sm"
-          />
-          <PrivacyMicro />
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="w-full rounded-md bg-graphite py-3 text-sm font-semibold text-white disabled:opacity-60"
+            className="w-full rounded-md bg-graphite py-3 text-sm font-semibold text-white"
           >
-            {status === 'loading' ? 'Booking…' : 'Request site scan'}
+            {status === 'loading' ? '…' : 'Request scan'}
           </button>
-          {feedback && (
-            <p className={`text-sm ${status === 'error' ? 'text-red-600' : 'text-accent-dim'}`}>
-              {feedback}
-            </p>
-          )}
+          {feedback && <p className="text-sm text-accent-dim">{feedback}</p>}
+          <PrivacyMicro />
         </form>
       </div>
     </section>

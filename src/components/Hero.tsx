@@ -1,64 +1,88 @@
 import { CTAButtons } from './CTAButtons'
-import { EligibilityBanner } from './EligibilityBanner'
-import { useCurrency } from '../context/CurrencyContext'
-import { formatMoney } from '../lib/currency'
-import { MIN_MONTHLY_BILL } from '../constants/eligibility'
 
 export function Hero() {
-  const { currency } = useCurrency()
-  const exampleBill = MIN_MONTHLY_BILL[currency] * 5
-  const exampleSave = Math.round(exampleBill * 12 * 0.9)
-
   return (
-    <section className="section-anchor relative overflow-hidden bg-graphite pt-28 pb-16 md:pt-32 md:pb-20">
-      <div className="grid-bg absolute inset-0 opacity-50" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-graphite" />
+    <section className="section-anchor relative overflow-hidden bg-graphite pt-28 pb-20 md:pt-32 md:pb-24">
+      <div className="grid-bg absolute inset-0 opacity-40" />
+      <div className="absolute inset-0 bg-gradient-to-r from-graphite via-graphite/95 to-transparent" />
 
-      <div className="relative mx-auto max-w-6xl px-6">
-        <p className="mb-4 inline-block rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
-          Pilot program · EU, UK & North America
-        </p>
+      <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 lg:grid-cols-2 lg:gap-14">
+        <div>
+          <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-white md:text-5xl lg:text-[3.5rem]">
+            Pay <span className="text-accent">10%</span> of your cleaning bill.
+            <span className="block text-white/90">Save 90%.</span>
+          </h1>
 
-        <h1 className="max-w-4xl text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl">
-          Pay <span className="text-accent">10%</span> of what you spend on cleaning today.
-        </h1>
-
-        <p className="mt-6 max-w-2xl text-xl leading-relaxed text-white/90 md:text-2xl">
-          Save <span className="font-semibold text-accent">90%</span>. Same building — higher
-          standard, finished in half the time.
-        </p>
-
-        <p className="mt-4 max-w-2xl text-base text-slate-muted">
-          CleanGrid is fully managed robotic cleaning for offices, schools, factories, hotels, and
-          large campuses. You don&apos;t buy robots — you subscribe to a building that meets your
-          cleanliness standard.
-        </p>
-
-        <div className="mt-6 rounded-lg border border-white/10 bg-white/5 px-5 py-4 md:inline-block">
-          <p className="text-sm text-slate-muted">
-            Example: {formatMoney(exampleBill, currency)}/month today →{' '}
-            <span className="font-semibold text-accent">
-              {formatMoney(Math.round(exampleBill * 0.1), currency)}/month
-            </span>{' '}
-            with CleanGrid
+          <p className="mt-6 max-w-lg text-lg text-slate-muted">
+            Fully managed robotic cleaning for large buildings. You don&apos;t buy robots — you
+            subscribe to cleanliness.
           </p>
-          <p className="mt-1 text-xs text-accent">
-            ≈ {formatMoney(exampleSave, currency)} saved per year on that bill alone
+
+          <CTAButtons className="mt-8" primary="calculate" />
+
+          <p className="mt-6 text-xs text-slate-muted">
+            For buildings over 5,000 m² or €10k+ monthly cleaning spend · EU, UK, North America
           </p>
         </div>
 
-        <EligibilityBanner className="mt-6" dark />
-
-        <CTAButtons className="mt-8" primary="calculate" />
-
-        <p className="mt-6 text-sm text-slate-muted">
-          Already know your address?{' '}
-          <a href="#map-estimate" className="font-medium text-accent underline hover:text-teal-300">
-            Search your building on the map
-          </a>{' '}
-          for an instant ballpark — then upload your bill to lock 10% pricing.
-        </p>
+        <div className="relative mx-auto aspect-square w-full max-w-[420px] lg:max-w-none">
+          <BuildingVisual />
+        </div>
       </div>
     </section>
+  )
+}
+
+function BuildingVisual() {
+  return (
+    <svg viewBox="0 0 400 400" className="h-full w-full" aria-hidden>
+      <defs>
+        <linearGradient id="hero-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1a1f28" />
+          <stop offset="100%" stopColor="#0c0e12" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="400" fill="url(#hero-floor)" rx="12" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <line
+          key={`h${i}`}
+          x1={40}
+          y1={50 + i * 45}
+          x2={360}
+          y2={50 + i * 45}
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1"
+        />
+      ))}
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <line
+          key={`v${i}`}
+          x1={60 + i * 50}
+          y1={40}
+          x2={60 + i * 50}
+          y2={360}
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1"
+        />
+      ))}
+      <rect x="80" y="80" width="120" height="90" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <rect x="220" y="80" width="100" height="90" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <rect x="80" y="200" width="240" height="120" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <path
+        className="hero-path"
+        d="M100 120 L180 120 L180 160 L260 160 L260 240 L140 240 L140 280 L300 280"
+      />
+      <path
+        className="hero-path"
+        style={{ animationDelay: '-8s' }}
+        d="M280 100 L320 100 L320 200 L200 200 L200 120"
+      />
+      <circle cx="180" cy="120" r="4" fill="#14b8a6" opacity="0.8" />
+      <circle cx="260" cy="160" r="4" fill="#14b8a6" opacity="0.6" />
+      <circle cx="140" cy="240" r="4" fill="#14b8a6" opacity="0.7" />
+      <text x="200" y="380" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="11" fontFamily="system-ui">
+        Night cleaning network · active
+      </text>
+    </svg>
   )
 }
