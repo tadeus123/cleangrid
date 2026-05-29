@@ -26,10 +26,20 @@ export function SavingsCalculator() {
     }
   }, [monthly])
 
-  const syncMonthly = (n: number) => {
-    const clamped = Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, n))
-    setMonthly(clamped)
-    setInputValue(String(clamped))
+  const applyTypedAmount = (raw: string) => {
+    setInputValue(raw)
+    if (raw.trim() === '') {
+      setMonthly(0)
+      return
+    }
+    setMonthly(Math.max(0, parseMoneyInput(raw)))
+  }
+
+  const sliderValue = Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, monthly))
+
+  const handleSliderChange = (n: number) => {
+    setMonthly(n)
+    setInputValue(String(n))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,15 +109,12 @@ export function SavingsCalculator() {
 
           <input
             id="monthly-cost"
-            type="number"
-            min={SLIDER_MIN}
-            max={SLIDER_MAX}
-            step={500}
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="Enter monthly bill"
             value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value)
-              syncMonthly(parseMoneyInput(e.target.value))
-            }}
+            onChange={(e) => applyTypedAmount(e.target.value)}
             className="w-full rounded-md border border-white/15 bg-graphite-light px-4 py-3 text-3xl font-bold text-white"
           />
 
@@ -116,15 +123,14 @@ export function SavingsCalculator() {
             min={SLIDER_MIN}
             max={SLIDER_MAX}
             step={5000}
-            value={monthly}
-            onChange={(e) => syncMonthly(Number(e.target.value))}
+            value={sliderValue}
+            onChange={(e) => handleSliderChange(Number(e.target.value))}
             className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10"
-            aria-label="Adjust monthly cleaning bill"
+            aria-label="Quick adjust (optional)"
           />
-          <div className="mt-1 flex justify-between text-xs text-slate-muted">
-            <span>{formatMoney(SLIDER_MIN, currency)}</span>
-            <span>{formatMoney(SLIDER_MAX, currency)}</span>
-          </div>
+          <p className="mt-1 text-center text-xs text-slate-muted">
+            Slider is a quick guide · type any amount above
+          </p>
 
           <div className="mt-8 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-3">
             <div>
