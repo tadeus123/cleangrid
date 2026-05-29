@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   WHATSAPP_CHAT_URL,
   WHATSAPP_DISPLAY,
+  WECHAT_ADD_URL,
+  WECHAT_DISPLAY,
   WECHAT_QR_SRC,
   whatsappQrUrl,
 } from '../constants/contact'
@@ -62,17 +64,19 @@ function StripBtn({
   href,
   title,
   className,
+  borderBottom = true,
 }: {
   children: ReactNode
   href?: string
   title: string
   className?: string
+  borderBottom?: boolean
 }) {
   const inner = (
     <span
       className={cx(
-        'flex w-12 items-center justify-center border-b border-white/10 text-accent transition-colors hover:bg-white/[0.06]',
-        ROW,
+        'flex h-14 w-12 items-center justify-center text-accent transition-colors hover:bg-white/[0.06]',
+        borderBottom && 'border-b border-white/10',
         className,
       )}
     >
@@ -80,13 +84,40 @@ function StripBtn({
     </span>
   )
   if (href) {
+    const external = href.startsWith('http')
     return (
-      <a href={href} title={title} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+      <a href={href} title={title} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
         {inner}
       </a>
     )
   }
   return inner
+}
+
+function ContactNumberRow({
+  label,
+  number,
+  href,
+  title,
+}: {
+  label: string
+  number: string
+  href: string
+  title: string
+}) {
+  const external = href.startsWith('http')
+  return (
+    <a
+      href={href}
+      title={title}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      className="flex h-14 flex-col justify-center overflow-hidden border-b border-white/10 px-4 transition hover:bg-white/[0.04]"
+    >
+      <span className="text-[10px] font-medium uppercase tracking-wider text-slate-muted">{label}</span>
+      <span className="text-[15px] font-semibold leading-tight text-white">{number}</span>
+    </a>
+  )
 }
 
 export function ContactSidebar() {
@@ -109,15 +140,17 @@ export function ContactSidebar() {
       onMouseLeave={() => setOpen(false)}
       aria-label="Contact"
     >
-      {/* Panel + strip share row heights */}
       <div
         className={cx(
           'overflow-hidden rounded-l-xl border border-r-0 border-white/10 bg-graphite-light shadow-2xl transition-[grid-template-columns] duration-300 ease-out',
           open ? 'grid-cols-[17.5rem_3rem]' : 'grid-cols-[0rem_3rem]',
         )}
-        style={{ display: 'grid', gridTemplateRows: '3.5rem 3.5rem 1fr 3.5rem' }}
+        style={{
+          display: 'grid',
+          gridTemplateRows: '3.5rem 3.5rem 3.5rem 1fr 3.5rem',
+        }}
       >
-        {/* —— Row 1: Quote —— */}
+        {/* Row 1: Quote */}
         <div className="overflow-hidden border-b border-white/10 px-3 py-2">
           <a
             href="#upload"
@@ -130,21 +163,36 @@ export function ContactSidebar() {
           <IconQuote />
         </StripBtn>
 
-        {/* —— Row 2: WhatsApp number —— */}
-        <a
+        {/* Row 2: WhatsApp */}
+        <ContactNumberRow
+          label="WhatsApp"
+          number={WHATSAPP_DISPLAY}
           href={WHATSAPP_CHAT_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col justify-center overflow-hidden border-b border-white/10 px-4 transition hover:bg-white/[0.04]"
-        >
-          <span className="text-[10px] font-medium uppercase tracking-wider text-slate-muted">WhatsApp</span>
-          <span className="text-[15px] font-semibold leading-tight text-white">{WHATSAPP_DISPLAY}</span>
-        </a>
-        <StripBtn href={WHATSAPP_CHAT_URL} title="WhatsApp">
-          <IconWhatsApp />
-        </StripBtn>
+          title="Chat on WhatsApp"
+        />
 
-        {/* —— Row 3: QR codes (beside teal Contact tab) —— */}
+        {/* Row 3: WeChat */}
+        <ContactNumberRow
+          label="WeChat"
+          number={WECHAT_DISPLAY}
+          href={WECHAT_ADD_URL}
+          title="Add on WeChat"
+        />
+
+        {/* Strip: WhatsApp + WeChat icons stacked (rows 2–3) */}
+        <div
+          className="flex flex-col border-b border-white/10"
+          style={{ gridColumn: 2, gridRow: '2 / 4' }}
+        >
+          <StripBtn href={WHATSAPP_CHAT_URL} title="WhatsApp" borderBottom>
+            <IconWhatsApp />
+          </StripBtn>
+          <StripBtn href={WECHAT_ADD_URL} title="Add on WeChat" borderBottom={false}>
+            <IconWeChat />
+          </StripBtn>
+        </div>
+
+        {/* Row 4: QR codes + Contact tab */}
         <div className="overflow-hidden border-b border-white/10 px-3 py-3">
           <div className="space-y-3">
             <QrCard label="Scan · WhatsApp" src={whatsappQrUrl(140)} alt="WhatsApp QR code" />
@@ -153,6 +201,7 @@ export function ContactSidebar() {
         </div>
         <div
           className="flex items-center justify-center border-b border-l border-white/10 bg-accent"
+          style={{ gridColumn: 2, gridRow: 4 }}
           aria-hidden
         >
           <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] font-bold uppercase tracking-[0.22em] text-graphite">
@@ -160,13 +209,11 @@ export function ContactSidebar() {
           </span>
         </div>
 
-        {/* —— Row 4: WeChat —— */}
+        {/* Row 5: Footer */}
         <div className="flex items-center px-4">
           <span className="text-xs text-slate-muted">We reply within 1 business day</span>
         </div>
-        <StripBtn title="WeChat" className="border-b-0">
-          <IconWeChat />
-        </StripBtn>
+        <div className="border-l border-white/10 bg-graphite-light" style={{ gridColumn: 2, gridRow: 5 }} aria-hidden />
       </div>
     </div>
   )
@@ -195,7 +242,10 @@ export function ContactWhatsAppBar() {
               Get a quote
             </a>
             <a href={WHATSAPP_CHAT_URL} target="_blank" rel="noopener noreferrer" className="block text-center text-white">
-              {WHATSAPP_DISPLAY}
+              WhatsApp · {WHATSAPP_DISPLAY}
+            </a>
+            <a href={WECHAT_ADD_URL} className="block text-center text-white">
+              WeChat · {WECHAT_DISPLAY}
             </a>
             <QrCard label="WhatsApp" src={whatsappQrUrl(120)} alt="WhatsApp" />
             <QrCard label="WeChat" src={WECHAT_QR_SRC} alt="WeChat" />
