@@ -26,11 +26,6 @@ export function Footer() {
             <p className="text-sm font-medium text-white">Site</p>
             <ul className="mt-3 space-y-2 text-sm text-slate-muted">
               <li>
-                <a href="#map-estimate" className="hover:text-accent">
-                  Building map estimate
-                </a>
-              </li>
-              <li>
                 <a href="#calculator" className="hover:text-accent">
                   Savings calculator
                 </a>

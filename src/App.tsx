@@ -1,7 +1,6 @@
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { SavingsCalculator } from './components/SavingsCalculator'
-import { BuildingMapEstimator } from './components/BuildingMapEstimator'
 import { NoOwnership } from './components/NoOwnership'
 import { Process } from './components/Process'
 import { ReportDashboard } from './components/ReportDashboard'
@@ -22,7 +21,6 @@ function App() {
       <main>
         <Hero />
         <SavingsCalculator />
-        <BuildingMapEstimator />
         <NoOwnership />
         <Process />
         <ReportDashboard />

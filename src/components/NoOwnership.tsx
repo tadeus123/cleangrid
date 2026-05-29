@@ -10,7 +10,7 @@ export function NoOwnership() {
           </h2>
           <ul className="mt-8 space-y-4 text-slate-muted">
             {[
-              'Install, map, and charge the fleet',
+              'Install, route, and charge the fleet',
               'Night cleaning included — 24/7 optional',
               'Maintain and replace robots',
               'You pay one monthly subscription',

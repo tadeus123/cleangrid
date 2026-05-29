@@ -2,6 +2,7 @@
 
 @theme {
   --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --color-graphite: #0c0e12;
   --color-graphite-light: #161a22;
   --color-slate-muted: #6b7280;
@@ -59,8 +60,6 @@ input[type='range'] {
   accent-color: var(--color-accent);
 }
 
-.leaflet-container {
-  z-index: 0;
-  font-family: inherit;
-  background: #0c0e12;
+.font-serif {
+  font-family: var(--font-serif);
 }
