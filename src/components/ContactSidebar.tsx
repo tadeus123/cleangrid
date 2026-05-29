@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   WHATSAPP_CHAT_URL,
   WHATSAPP_DISPLAY,
@@ -44,6 +44,32 @@ function IconQr({ className = 'h-5 w-5' }: { className?: string }) {
 
 const rowClass =
   'flex items-center gap-3 border-b border-white/8 px-4 py-3.5 text-sm text-white transition hover:bg-white/[0.04]'
+
+function QrCard({
+  label,
+  icon,
+  src,
+  alt,
+}: {
+  label: string
+  icon: ReactNode
+  src: string
+  alt: string
+}) {
+  return (
+    <div className="mx-3 mb-3 overflow-hidden rounded-lg border border-white/12 bg-graphite shadow-inner">
+      <div className="flex items-center gap-2 border-b border-white/8 bg-white/[0.04] px-3 py-2">
+        {icon}
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-muted">{label}</span>
+      </div>
+      <div className="flex justify-center bg-gradient-to-b from-white to-gray-100 p-3">
+        <div className="rounded-md border border-gray-200/80 bg-white p-2 shadow-sm">
+          <img src={src} alt={alt} width={112} height={112} className="block size-28 object-contain" />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function ContactSidebar() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -102,31 +128,18 @@ export function ContactSidebar() {
             </span>
           </a>
 
-          <div className="border-b border-white/8 px-4 py-3">
-            <p className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-muted">
-              <IconQr className="h-4 w-4 text-accent" />
-              Scan · WhatsApp
-            </p>
-            <div className="mt-2 rounded bg-white p-1.5">
-              <img
-                src={whatsappQrUrl(120)}
-                alt="WhatsApp QR"
-                width={120}
-                height={120}
-                className="mx-auto block"
-              />
-            </div>
-          </div>
-
-          <div className="px-4 py-3">
-            <p className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-muted">
-              <IconWeChat className="h-4 w-4 text-accent" />
-              Scan · WeChat
-            </p>
-            <div className="mt-2 rounded bg-white p-1.5">
-              <img src={WECHAT_QR_SRC} alt="WeChat QR" width={120} height={120} className="mx-auto block" />
-            </div>
-          </div>
+          <QrCard
+            label="Scan · WhatsApp"
+            icon={<IconQr className="h-4 w-4 text-accent" />}
+            src={whatsappQrUrl(140)}
+            alt="WhatsApp QR code"
+          />
+          <QrCard
+            label="Scan · WeChat"
+            icon={<IconWeChat className="h-4 w-4 text-accent" />}
+            src={WECHAT_QR_SRC}
+            alt="WeChat QR code"
+          />
         </div>
       </div>
 
@@ -209,15 +222,19 @@ export function ContactWhatsAppBar() {
               <IconWhatsApp className="h-5 w-5 text-accent" />
               {WHATSAPP_DISPLAY}
             </a>
-            <div className="grid grid-cols-2 gap-3 border-t border-white/8 p-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-muted">WhatsApp</p>
-                <img src={whatsappQrUrl(110)} alt="" className="mt-1 rounded bg-white p-1" />
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-muted">WeChat</p>
-                <img src={WECHAT_QR_SRC} alt="" className="mt-1 rounded bg-white p-1" />
-              </div>
+            <div className="space-y-2 p-2">
+              <QrCard
+                label="WhatsApp"
+                icon={<IconWhatsApp className="h-4 w-4 text-accent" />}
+                src={whatsappQrUrl(120)}
+                alt="WhatsApp"
+              />
+              <QrCard
+                label="WeChat"
+                icon={<IconWeChat className="h-4 w-4 text-accent" />}
+                src={WECHAT_QR_SRC}
+                alt="WeChat"
+              />
             </div>
           </div>
         )}

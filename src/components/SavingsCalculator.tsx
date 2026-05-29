@@ -33,28 +33,60 @@ export function SavingsCalculator() {
     setInputValue(String(clamped))
   }
 
-  const handleLeadSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !company) return
+    if (!company.trim()) return
     setLeadStatus('loading')
-    const result = await submitLead({
-      type: 'calculator',
-      email,
-      company,
-      monthlyBill: monthly,
-      currency,
-      message: `CleanGrid ${formatMoney(cleanGrid, currency)}/mo · save ${formatMoney(yearlySave, currency)}/yr`,
-    })
-    setLeadStatus(result.ok ? 'done' : 'error')
-    setLeadMessage(result.message)
+    setLeadMessage('')
+
+    try {
+      const { downloadSavingsPdf } = await import('../lib/generateSavingsPdf')
+      downloadSavingsPdf({
+        company: company.trim(),
+        email: email.trim() || undefined,
+        currency,
+        monthlyCurrent: monthly,
+        monthlyCleanGrid: cleanGrid,
+        monthlySave,
+        yearlySave,
+      })
+    } catch {
+      setLeadStatus('error')
+      setLeadMessage('Could not create PDF. Try again or contact us on WhatsApp.')
+      return
+    }
+
+    let message = 'PDF downloaded — share it with your team.'
+
+    if (email.trim()) {
+      const result = await submitLead({
+        type: 'calculator',
+        email: email.trim(),
+        company: company.trim(),
+        monthlyBill: monthly,
+        currency,
+        message: `CleanGrid ${formatMoney(cleanGrid, currency)}/mo · save ${formatMoney(yearlySave, currency)}/yr`,
+      })
+      if (result.ok) {
+        message += ' We received your details and will follow up within 1 business day.'
+      } else {
+        message += ` ${result.message}`
+      }
+    }
+
+    setLeadStatus('done')
+    setLeadMessage(message)
   }
 
   return (
     <section id="calculator" className="section-anchor border-y border-white/5 bg-graphite-light py-20 md:py-24">
       <div className="mx-auto max-w-3xl px-6">
         <h2 className="text-center text-3xl font-bold tracking-tight text-white md:text-4xl">
-          Your CleanGrid price = 10% of this number
+          Build your savings report
         </h2>
+        <p className="mt-3 text-center text-sm text-slate-muted">
+          Download a branded PDF to share with finance and facilities — current spend vs CleanGrid.
+        </p>
 
         <div className="mt-10 rounded-xl border border-white/10 bg-graphite p-8 report-glow">
           <div className="mb-4 flex items-center justify-between gap-4">
@@ -115,21 +147,20 @@ export function SavingsCalculator() {
             </p>
           )}
 
-          <form onSubmit={handleLeadSubmit} className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row">
-            <input
-              type="email"
-              required
-              placeholder="Work email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white"
-            />
+          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row">
             <input
               type="text"
               required
-              placeholder="Company"
+              placeholder="Company / building"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
+              className="flex-1 rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white"
+            />
+            <input
+              type="email"
+              placeholder="Work email (optional)"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="flex-1 rounded-md border border-white/15 bg-graphite-light px-4 py-2.5 text-sm text-white"
             />
             <button
@@ -137,7 +168,7 @@ export function SavingsCalculator() {
               disabled={leadStatus === 'loading'}
               className="rounded-md bg-accent px-6 py-2.5 text-sm font-semibold text-graphite disabled:opacity-60"
             >
-              {leadStatus === 'loading' ? '…' : 'Email estimate'}
+              {leadStatus === 'loading' ? '…' : 'Download PDF report'}
             </button>
           </form>
           {leadMessage && (
@@ -147,7 +178,6 @@ export function SavingsCalculator() {
           )}
           <PrivacyMicro dark />
         </div>
-
       </div>
     </section>
   )

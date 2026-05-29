@@ -21,7 +21,41 @@ export type SubmitResult = {
   message: string
 }
 
+const SUCCESS_MSG =
+  'Thank you. We will respond within 1 business day with your CleanGrid price and next steps.'
+
+async function postWeb3Forms(payload: LeadPayload): Promise<SubmitResult | null> {
+  const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY as string | undefined
+  if (!accessKey) return null
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: accessKey,
+        subject: `CleanGrid ${payload.type} — ${payload.company}`,
+        email: payload.email,
+        from_name: payload.name ?? payload.company,
+        message: formatLeadMessage(payload),
+        attachment: payload.fileBase64,
+        file_name: payload.fileName,
+      }),
+    })
+    const data = (await res.json()) as { success?: boolean; message?: string }
+    if (data.success) return { ok: true, message: SUCCESS_MSG }
+    return {
+      ok: false,
+      message: data.message ?? `Could not send. WhatsApp us: ${WHATSAPP_DISPLAY}`,
+    }
+  } catch {
+    return null
+  }
+}
+
 export async function submitLead(payload: LeadPayload): Promise<SubmitResult> {
+  let apiFailed = false
+
   try {
     const res = await fetch('/api/lead', {
       method: 'POST',
@@ -30,50 +64,21 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitResult> {
     })
     const data = (await res.json()) as { success?: boolean; message?: string; error?: string }
     if (res.ok && data.success !== false) {
-      return {
-        ok: true,
-        message: 'Thank you. We will respond within 1 business day with your CleanGrid price and next steps.',
-      }
+      return { ok: true, message: SUCCESS_MSG }
     }
-    return {
-      ok: false,
-      message:
-        data.message ??
-        data.error ??
-        `Something went wrong. Message us on WhatsApp (${WHATSAPP_DISPLAY}).`,
-    }
+    apiFailed = true
   } catch {
-    const fallbackKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY as string | undefined
-    if (fallbackKey) {
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            access_key: fallbackKey,
-            subject: `CleanGrid ${payload.type}`,
-            email: payload.email,
-            from_name: payload.name ?? payload.company,
-            message: formatLeadMessage(payload),
-            attachment: payload.fileBase64,
-            file_name: payload.fileName,
-          }),
-        })
-        const data = (await res.json()) as { success?: boolean }
-        if (data.success) {
-          return {
-            ok: true,
-            message: 'Thank you. We will respond within 1 business day with your CleanGrid price and next steps.',
-          }
-        }
-      } catch {
-        /* fall through */
-      }
-    }
-    return {
-      ok: false,
-      message: `Could not send right now. Message us on WhatsApp (${WHATSAPP_DISPLAY}) or try again.`,
-    }
+    apiFailed = true
+  }
+
+  if (apiFailed) {
+    const direct = await postWeb3Forms(payload)
+    if (direct) return direct
+  }
+
+  return {
+    ok: false,
+    message: `PDF saved locally. To reach us now: WhatsApp ${WHATSAPP_DISPLAY}.`,
   }
 }
 

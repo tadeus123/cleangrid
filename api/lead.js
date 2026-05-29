@@ -20,7 +20,15 @@ export default async function handler(request, response) {
     })
   }
 
-  const body = request.body ?? {}
+  let body = request.body ?? {}
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body)
+    } catch {
+      return response.status(400).json({ success: false, error: 'Invalid JSON body' })
+    }
+  }
+
   const lines = [
     `Submission type: ${body.type ?? 'quote'}`,
     `Company: ${body.company ?? '—'}`,
@@ -55,8 +63,15 @@ export default async function handler(request, response) {
       body: JSON.stringify(payload),
     })
     const data = await upstream.json()
-    return response.status(upstream.ok ? 200 : 502).json(data)
-  } catch {
-    return response.status(500).json({ success: false, message: 'Upstream error' })
+    if (!upstream.ok || data.success === false) {
+      return response.status(502).json({
+        success: false,
+        message: data.message ?? data.error ?? 'Web3Forms rejected the submission',
+      })
+    }
+    return response.status(200).json({ success: true, message: 'OK' })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Upstream error'
+    return response.status(500).json({ success: false, message: msg })
   }
 }
