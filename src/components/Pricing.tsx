@@ -1,49 +1,72 @@
+import { useCurrency } from '../context/CurrencyContext'
+import { formatMoney, BENCHMARK_PER_1000_SQM } from '../lib/currency'
+
 const included = [
-  'Humanoid cleaning fleet',
-  'Site mapping and charging setup',
-  'Fleet monitoring and maintenance',
-  'Replacement robots',
-  'Cleaning reports after every shift',
-  'Night cleaning (24/7 optional)',
-  'Service-level guarantee',
+  'Robotic cleaning fleet (humanoid or mixed fleet per site)',
+  'Site mapping, charging, and route approval',
+  'Fleet monitoring, maintenance, and replacement units',
+  'Proof-of-clean reports after every shift',
+  'Night cleaning standard (24/7 optional add-on)',
+  'Service-level agreement with measurable metrics',
+  'Human escalation and on-call support',
 ]
 
 export function Pricing() {
+  const { currency } = useCurrency()
+
   return (
-    <section id="pricing" className="bg-white py-20">
+    <section id="pricing" className="section-anchor bg-white py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-graphite">Brutally simple pricing</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-graphite">Transparent pricing</h2>
             <p className="mt-4 text-slate-muted">
-              CleanGrid does not copy the old model of hours, m², or vague quotes. You subscribe to
-              cleanliness at a fraction of what you pay today.
+              One primary rule. One benchmark reference. No vague hourly quotes.
             </p>
+
             <div className="mt-8 space-y-6">
               <div className="rounded-lg border-2 border-accent/30 bg-teal-50/50 p-6">
-                <p className="text-sm font-medium text-accent-dim">Primary rule</p>
+                <p className="text-sm font-medium text-accent-dim">Primary rule (most sites)</p>
                 <p className="mt-2 text-2xl font-bold text-graphite">
-                  Price = 10% of your current cleaning cost
+                  Monthly price = 10% of your current cleaning spend
                 </p>
                 <p className="mt-2 text-sm text-slate-muted">
-                  Show us your current cleaning bill. We clean your building for 10% of it.
+                  Upload your invoice. We confirm scope on a site scan, then fix your subscription in
+                  writing. You save 90% vs. today if we hit agreed SLA.
                 </p>
               </div>
+
               <div className="rounded-lg border border-gray-200 p-6">
-                <p className="text-sm font-medium text-graphite">Benchmark pricing</p>
-                <p className="mt-2 text-xl font-bold text-graphite">From €99 per 1,000 m² per clean</p>
+                <p className="text-sm font-medium text-graphite">Benchmark reference</p>
+                <p className="mt-2 text-xl font-bold text-graphite">
+                  From {formatMoney(BENCHMARK_PER_1000_SQM[currency], currency)} per 1,000 m² per
+                  scheduled visit
+                </p>
                 <p className="mt-2 text-sm text-slate-muted">
-                  Or upload your invoice — whichever is clearer for your building.
+                  Useful when you don&apos;t have a single invoice yet. Final price is the{' '}
+                  <strong>lower of</strong> invoice-based 10% or the written quote after site scan —
+                  never the higher of two numbers.
                 </p>
               </div>
+
+              <p className="text-sm text-slate-muted">
+                <strong>Setup:</strong> €0 or minimal onboarding on qualifying contracts.{' '}
+                <strong>Term:</strong> typically 24–36 months.
+              </p>
             </div>
           </div>
+
           <div className="rounded-xl border border-gray-200 bg-gray-50 p-8">
             <h3 className="font-semibold text-graphite">Included in every subscription</h3>
             <ul className="mt-6 space-y-3">
               {included.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-slate-muted">
-                  <svg className="mt-0.5 h-5 w-5 shrink-0 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg
+                    className="mt-0.5 h-5 w-5 shrink-0 text-accent"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   {item}
@@ -51,9 +74,15 @@ export function Pricing() {
               ))}
             </ul>
             <p className="mt-8 text-xs text-slate-muted">
-              Minimum term typically 24–36 months. Setup included for larger contracts. Premium
-              add-ons: 24/7 bathrooms, emergency spill response, weekend deep clean.
+              Premium add-ons: CleanGrid Always (24/7), CleanGrid Bath, emergency spill response,
+              weekend deep clean, consumables at cost where not included.
             </p>
+            <a
+              href="#upload"
+              className="mt-6 inline-flex w-full justify-center rounded-md bg-accent py-3 text-sm font-semibold text-graphite"
+            >
+              Upload cleaning bill
+            </a>
           </div>
         </div>
       </div>

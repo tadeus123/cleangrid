@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0c0e12"/>
+  <defs>
+    <pattern id="g" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#14b8a6" stroke-width="0.5" opacity="0.15"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <text x="80" y="280" fill="#fff" font-family="system-ui,sans-serif" font-size="64" font-weight="700">CleanGrid</text>
+  <text x="80" y="360" fill="#9ca3af" font-family="system-ui,sans-serif" font-size="36">Pay 10% of today&apos;s cleaning bill. Save 90%.</text>
+  <text x="80" y="420" fill="#14b8a6" font-family="system-ui,sans-serif" font-size="28">Twice the standard · Half the time · Fully managed</text>
+</svg>

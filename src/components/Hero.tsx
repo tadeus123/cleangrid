@@ -1,91 +1,50 @@
 import { CTAButtons } from './CTAButtons'
+import { BuildingVisual } from './BuildingVisual'
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-graphite pt-28 pb-20 md:pt-36 md:pb-28">
+    <section className="section-anchor relative overflow-hidden bg-graphite pt-28 pb-20 md:pt-36 md:pb-28">
       <div className="grid-bg absolute inset-0 opacity-60" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-graphite/50 to-graphite" />
 
       <div className="relative mx-auto max-w-6xl px-6">
+        <p className="mb-6 inline-block rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
+          Now accepting pilot buildings in the EU, UK, and North America
+        </p>
+
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
             <p className="mb-4 text-sm font-medium uppercase tracking-widest text-accent">
-              The robotic cleanliness layer for large buildings
+              The robotic cleanliness layer for large buildings — we install and operate inside yours
             </p>
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-[3.25rem]">
               Cleaning is no longer a staffing problem.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-muted">
-              Fully managed humanoid cleaning fleets for offices, schools, factories, hotels,
-              warehouses, and public buildings — from{' '}
-              <span className="font-medium text-white">10% of your current cleaning cost</span>.
-              Twice as clean. Half the time.
+              Fully managed robotic cleaning for offices, schools, factories, hotels, and more.{' '}
+              <span className="font-medium text-white">
+                Pay 10% of today&apos;s cleaning bill (save 90%).
+              </span>{' '}
+              Higher cleanliness standard. Finished in half the time.
             </p>
             <p className="mt-3 text-sm text-slate-muted">
-              From €99 per 1,000 m² per clean · Or upload your invoice — we price at 10%
+              Upload your invoice for an exact price — or use the benchmark from €99 per 1,000 m² per
+              scheduled visit
+              <sup className="ml-0.5 text-accent">1</sup>
             </p>
             <CTAButtons className="mt-8" />
           </div>
 
-          <div className="relative hidden aspect-square max-h-[420px] lg:block">
-            <BuildingVisual />
+          <div className="relative mx-auto aspect-square w-full max-w-[320px] lg:max-h-[420px] lg:max-w-none">
+            <BuildingVisual className="h-full w-full" />
           </div>
         </div>
+
+        <p className="mt-10 text-xs text-slate-muted">
+          <sup>1</sup> Benchmark depends on visit frequency and scope. Your contract price is confirmed
+          after a site scan; invoice-based pricing is typically 10% of current spend.
+        </p>
       </div>
     </section>
-  )
-}
-
-function BuildingVisual() {
-  return (
-    <svg viewBox="0 0 400 400" className="h-full w-full" aria-hidden>
-      <defs>
-        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1a1f28" />
-          <stop offset="100%" stopColor="#0c0e12" />
-        </linearGradient>
-      </defs>
-      <rect width="400" height="400" fill="url(#floor)" rx="8" />
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-        <line
-          key={`h${i}`}
-          x1={40}
-          y1={50 + i * 45}
-          x2={360}
-          y2={50 + i * 45}
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1"
-        />
-      ))}
-      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-        <line
-          key={`v${i}`}
-          x1={60 + i * 50}
-          y1={40}
-          x2={60 + i * 50}
-          y2={360}
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1"
-        />
-      ))}
-      <rect x="80" y="80" width="120" height="90" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-      <rect x="220" y="80" width="100" height="90" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-      <rect x="80" y="200" width="240" height="120" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-      <path
-        className="hero-path"
-        d="M100 120 L180 120 L180 160 L260 160 L260 240 L140 240 L140 280 L300 280"
-      />
-      <path
-        className="hero-path"
-        style={{ animationDelay: '-8s' }}
-        d="M280 100 L320 100 L320 200 L200 200 L200 120"
-      />
-      <circle cx="180" cy="120" r="4" fill="#14b8a6" opacity="0.8" />
-      <circle cx="260" cy="160" r="4" fill="#14b8a6" opacity="0.6" />
-      <circle cx="140" cy="240" r="4" fill="#14b8a6" opacity="0.7" />
-      <text x="200" y="380" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="11" fontFamily="system-ui">
-        Night cleaning network · active
-      </text>
-    </svg>
   )
 }
