@@ -1,13 +1,16 @@
 import { Header } from './components/Header'
-import { BuildingMapEstimator } from './components/BuildingMapEstimator'
+import { Hero } from './components/Hero'
 import { SavingsCalculator } from './components/SavingsCalculator'
+import { BuildingMapEstimator } from './components/BuildingMapEstimator'
 import { NoOwnership } from './components/NoOwnership'
 import { Process } from './components/Process'
 import { ReportDashboard } from './components/ReportDashboard'
+import { VisualProof } from './components/VisualProof'
 import { BuildingTypes } from './components/BuildingTypes'
 import { Comparison } from './components/Comparison'
 import { PerformanceGuarantee } from './components/PerformanceGuarantee'
 import { Pricing } from './components/Pricing'
+import { CaseStudy } from './components/CaseStudy'
 import { Trust } from './components/Trust'
 import { FoundingPartner } from './components/FoundingPartner'
 import { FAQ } from './components/FAQ'
@@ -22,15 +25,18 @@ function App() {
     <>
       <Header />
       <main>
-        <BuildingMapEstimator />
+        <Hero />
         <SavingsCalculator />
+        <BuildingMapEstimator />
         <NoOwnership />
         <Process />
         <ReportDashboard />
+        <VisualProof />
         <BuildingTypes />
         <Comparison />
         <PerformanceGuarantee />
         <Pricing />
+        <CaseStudy />
         <Trust />
         <FoundingPartner />
         <FAQ />

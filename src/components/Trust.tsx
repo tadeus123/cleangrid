@@ -51,6 +51,11 @@ export function Trust() {
             limits, and indemnity terms are set out in your facility agreement. Your legal team
             reviews before deployment — we expect that.
           </p>
+          <p className="mt-3 text-sm text-slate-muted">
+            <strong className="text-white">Operational images:</strong> retained per your contract
+            (typically 30–90 days for SLA evidence), access limited to your account team and
+            CleanGrid operations — deleted on request after contract end unless law requires otherwise.
+          </p>
         </div>
       </div>
     </section>

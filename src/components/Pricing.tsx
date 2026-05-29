@@ -1,5 +1,7 @@
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, BENCHMARK_PER_1000_SQM } from '../lib/currency'
+import { ADDON_HINTS, addonPriceHint } from '../constants/addons'
+import { EligibilityBanner } from './EligibilityBanner'
 
 const included = [
   'Robotic cleaning fleet (humanoid or mixed fleet per site)',
@@ -43,11 +45,13 @@ export function Pricing() {
                   scheduled visit
                 </p>
                 <p className="mt-2 text-sm text-slate-muted">
-                  Useful when you don&apos;t have a single invoice yet. Final price is the{' '}
-                  <strong>lower of</strong> invoice-based 10% or the written quote after site scan —
-                  never the higher of two numbers.
+                  <strong>Per visit</strong> = one scheduled cleaning run (e.g. one night). If you clean
+                  20 nights/month, multiply by 20 for a rough monthly benchmark. Binding price is
+                  always <strong>10% of your actual invoice</strong> after site scan.
                 </p>
               </div>
+
+              <EligibilityBanner />
 
               <p className="text-sm text-slate-muted">
                 <strong>Setup:</strong> €0 or minimal onboarding on qualifying contracts.{' '}
@@ -73,10 +77,30 @@ export function Pricing() {
                 </li>
               ))}
             </ul>
-            <p className="mt-8 text-xs text-slate-muted">
-              Premium add-ons: CleanGrid Always (24/7), CleanGrid Bath, emergency spill response,
-              weekend deep clean, consumables at cost where not included.
-            </p>
+            <div className="mt-8 rounded-lg border border-gray-200 bg-white p-4">
+              <p className="text-sm font-medium text-graphite">Premium add-ons (illustrative)</p>
+              <p className="mt-1 text-xs text-slate-muted">
+                On a {formatMoney(10_000, currency)}/mo base subscription, typical uplifts:
+              </p>
+              <ul className="mt-3 space-y-2 text-xs text-slate-muted">
+                <li>
+                  {ADDON_HINTS.always.label}:{' '}
+                  {addonPriceHint(10_000, ADDON_HINTS.always.pctLow, ADDON_HINTS.always.pctHigh, currency)}
+                </li>
+                <li>
+                  {ADDON_HINTS.bath.label}:{' '}
+                  {addonPriceHint(10_000, ADDON_HINTS.bath.pctLow, ADDON_HINTS.bath.pctHigh, currency)}
+                </li>
+                <li>
+                  {ADDON_HINTS.spill.label}:{' '}
+                  {addonPriceHint(10_000, ADDON_HINTS.spill.pctLow, ADDON_HINTS.spill.pctHigh, currency)}
+                </li>
+                <li>
+                  {ADDON_HINTS.deep.label}:{' '}
+                  {addonPriceHint(10_000, ADDON_HINTS.deep.pctLow, ADDON_HINTS.deep.pctHigh, currency)}
+                </li>
+              </ul>
+            </div>
             <a
               href="#upload"
               className="mt-6 inline-flex w-full justify-center rounded-md bg-accent py-3 text-sm font-semibold text-graphite"

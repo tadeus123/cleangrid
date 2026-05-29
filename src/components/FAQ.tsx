@@ -2,6 +2,10 @@ import { useState } from 'react'
 
 const faqs = [
   {
+    q: 'What buildings qualify?',
+    a: 'Typically 5,000+ m² cleanable area, or monthly cleaning spend above roughly €10k / $11k / £8.5k. Smaller sites may join the pilot — contact sales@cleangrid.com.',
+  },
+  {
     q: 'Do we need to buy the robots?',
     a: 'No. CleanGrid owns and operates the fleet. You subscribe to an agreed cleanliness standard — not hardware.',
   },

@@ -4,6 +4,8 @@ import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, parseMoneyInput } from '../lib/currency'
 import { fileToBase64, submitLead } from '../lib/submitLead'
+import { EligibilityBanner } from './EligibilityBanner'
+import { PrivacyMicro } from './PrivacyMicro'
 
 const BUILDING_TYPES = [
   'Office',
@@ -100,6 +102,7 @@ export function UploadSection() {
         <p className="mt-6 text-center text-lg text-slate-muted">
           We don&apos;t sell robots. We sell cleaner buildings for less — fully managed.
         </p>
+        <EligibilityBanner className="mt-4 text-center" dark />
 
         <div className="mt-8 flex justify-center gap-2 text-xs text-slate-muted">
           {['Contact', 'Building', 'Bill & file'].map((label, i) => (
@@ -235,10 +238,13 @@ export function UploadSection() {
                   {formatMoney(billNum, currency)})
                 </p>
               )}
+              <div className="rounded-lg border border-accent/20 bg-accent/5 p-4">
+                <PrivacyMicro dark />
+              </div>
               <label className="block cursor-pointer rounded-lg border border-dashed border-white/20 p-4">
-                <span className="text-sm font-medium text-white">Upload cleaning invoice (PDF)</span>
+                <span className="text-sm font-medium text-white">Upload cleaning invoice</span>
                 <span className="mt-1 block text-xs text-slate-muted">
-                  Encrypted in transit · Max 25 MB · Used only for your quote
+                  PDF, DOC, or DOCX · max 25 MB
                 </span>
                 <input
                   type="file"

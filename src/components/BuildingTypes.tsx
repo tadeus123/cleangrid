@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useCurrency } from '../context/CurrencyContext'
+import { ADDON_HINTS, addonPriceHint } from '../constants/addons'
 
 const buildings = [
   {
@@ -27,7 +29,8 @@ const buildings = [
   },
   {
     type: 'Healthcare',
-    benefit: 'Cleaning protocols aligned with your facility rules — not a replacement for clinical sterile services unless scoped.',
+    benefit:
+      'Protocols aligned with your facility rules — not a replacement for clinical sterile services unless scoped.',
   },
   {
     type: 'Public buildings',
@@ -39,30 +42,39 @@ const products = [
   {
     name: 'CleanGrid Night',
     desc: 'Nightly full-building cleaning when the site is empty or low-traffic.',
+    addonKey: null as keyof typeof ADDON_HINTS | null,
   },
   {
     name: 'CleanGrid Always',
     desc: '24/7 continuous cleaning for lobbies, bathrooms, and high-traffic zones.',
+    addonKey: 'always' as const,
   },
   {
     name: 'CleanGrid Factory',
     desc: 'Shift-change and overnight industrial floors, walkways, and break areas.',
+    addonKey: null,
   },
   {
     name: 'CleanGrid School',
     desc: 'After-hours reset of classrooms, bathrooms, gyms, and shared spaces.',
+    addonKey: null,
   },
   {
     name: 'CleanGrid Bath',
     desc: 'Bathrooms checked and refreshed on a fixed interval (e.g. every 30 minutes).',
+    addonKey: 'bath' as const,
   },
   {
     name: 'CleanGrid Proof',
-    desc: 'Dashboard, SLA metrics, and exportable reports after every shift.',
+    desc: 'Dashboard, SLA metrics, and exportable reports after every shift. Included in base.',
+    addonKey: null,
   },
 ]
 
+const BASE_EXAMPLE = 10_000
+
 export function BuildingTypes() {
+  const { currency } = useCurrency()
   const [activeProduct, setActiveProduct] = useState<string | null>(null)
   const selected = products.find((p) => p.name === activeProduct)
 
@@ -109,6 +121,20 @@ export function BuildingTypes() {
             <div className="mx-auto mt-6 max-w-lg rounded-lg border border-accent/30 bg-teal-50/50 p-6 text-center">
               <p className="font-semibold text-graphite">{selected.name}</p>
               <p className="mt-2 text-sm text-slate-muted">{selected.desc}</p>
+              {selected.addonKey && (
+                <p className="mt-3 text-xs font-medium text-accent-dim">
+                  Illustrative uplift on base:{' '}
+                  {addonPriceHint(
+                    BASE_EXAMPLE,
+                    ADDON_HINTS[selected.addonKey].pctLow,
+                    ADDON_HINTS[selected.addonKey].pctHigh,
+                    currency,
+                  )}
+                </p>
+              )}
+              {selected.name === 'CleanGrid Proof' && (
+                <p className="mt-2 text-xs text-slate-muted">Included in every subscription</p>
+              )}
             </div>
           )}
         </div>

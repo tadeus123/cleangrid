@@ -11,18 +11,18 @@ const btnSecondary =
 const btnTertiary =
   'inline-flex items-center justify-center rounded-md border border-accent/40 px-5 py-3 text-sm font-medium text-accent transition hover:bg-accent/10'
 
-export function CTAButtons({ primary = 'map', className = '', compact = false }: Props) {
+export function CTAButtons({ primary = 'calculate', className = '', compact = false }: Props) {
   const size = compact ? '[&_a]:px-3 [&_a]:py-2 [&_a]:text-xs' : ''
   return (
     <div className={`flex flex-wrap gap-3 ${size} ${className}`}>
-      <a href="#map-estimate" className={primary === 'map' ? btnPrimary : btnSecondary}>
-        Pick your building
+      <a href="#calculator" className={primary === 'calculate' ? btnPrimary : btnSecondary}>
+        Calculate savings
       </a>
       <a href="#upload" className={primary === 'upload' ? btnPrimary : btnSecondary}>
         Upload cleaning bill
       </a>
-      <a href="#calculator" className={primary === 'calculate' ? btnPrimary : btnTertiary}>
-        Calculate savings
+      <a href="#map-estimate" className={primary === 'map' ? btnPrimary : btnTertiary}>
+        Map estimate
       </a>
       {!compact && (
         <a href="#site-scan" className={primary === 'scan' ? btnPrimary : btnTertiary}>

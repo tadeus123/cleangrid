@@ -174,25 +174,19 @@ export function BuildingMapEstimator() {
     `${formatMoney(estimate.saveLow * 12, currency)} – ${formatMoney(estimate.saveHigh * 12, currency)}`
 
   return (
-    <section id="map-estimate" className="section-anchor relative bg-graphite pt-28 pb-12 md:pt-32">
-      <div className="grid-bg absolute inset-0 opacity-40" />
+    <section id="map-estimate" className="section-anchor relative border-t border-white/5 bg-graphite-light py-16 md:py-20">
+      <div className="grid-bg absolute inset-0 opacity-30" />
       <div className="relative mx-auto max-w-6xl px-6">
-        <p className="mb-4 inline-block rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
-          Now accepting pilot buildings in the EU, UK, and North America
-        </p>
         <div className="text-center lg:text-left">
           <p className="text-sm font-medium uppercase tracking-widest text-accent">
-            Instant building estimate
+            Instant ballpark (optional)
           </p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-[3.25rem]">
-            Pick your building.
-            <br />
-            <span className="text-accent">See your savings.</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-muted lg:mx-0">
-            Search your building — we read the footprint from the map and show an honest ballpark in
-            seconds. Upload your cleaning bill to lock{' '}
-            <span className="text-white">10% pricing</span> (save 90%).
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-white md:text-4xl">
+            Search your building on the map
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-muted lg:mx-0">
+            We read the footprint from OpenStreetMap and show a conservative savings range in seconds.
+            For a binding price, upload your cleaning bill — we charge 10% of that amount.
           </p>
         </div>
 

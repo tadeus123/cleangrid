@@ -4,6 +4,12 @@ import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, parseMoneyInput, BENCHMARK_PER_1000_SQM } from '../lib/currency'
 import { submitLead } from '../lib/submitLead'
+import { EligibilityBanner } from './EligibilityBanner'
+import { PrivacyMicro } from './PrivacyMicro'
+import { MIN_MONTHLY_BILL } from '../constants/eligibility'
+
+const SLIDER_MIN = 5_000
+const SLIDER_MAX = 500_000
 
 export function SavingsCalculator() {
   const { currency } = useCurrency()
@@ -25,10 +31,12 @@ export function SavingsCalculator() {
   }, [monthly])
 
   const syncMonthly = (n: number) => {
-    const clamped = Math.min(500000, Math.max(1000, n))
+    const clamped = Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, n))
     setMonthly(clamped)
     setInputValue(String(clamped))
   }
+
+  const belowMinimum = monthly < MIN_MONTHLY_BILL[currency]
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,15 +61,18 @@ export function SavingsCalculator() {
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white">
-              Upload your cleaning bill. Your price is 10% of what you pay today.
+              Calculate your savings in 10 seconds
             </h2>
             <p className="mt-4 text-slate-muted">
-              Your current invoice is the anchor. CleanGrid subscription = 10% of that amount. Same
-              building — higher agreed standard, shorter cleaning window, fully managed by us.
+              Enter what you pay for cleaning today. CleanGrid is{' '}
+              <strong className="text-white">10% of that number</strong> — you keep 90%.
             </p>
+            <EligibilityBanner className="mt-4" dark />
             <p className="mt-4 text-sm text-slate-muted">
-              Benchmark reference: from {formatMoney(BENCHMARK_PER_1000_SQM[currency], currency)} per
-              1,000 m² per scheduled visit (final quote after site scan).
+              <strong className="text-white">No invoice yet?</strong> Benchmark is{' '}
+              {formatMoney(BENCHMARK_PER_1000_SQM[currency], currency)} per 1,000 m²{' '}
+              <em>per cleaning visit</em> (not per month). ~20 visits/month ≈ monthly benchmark varies
+              by schedule — site scan confirms.
             </p>
           </div>
 
@@ -76,8 +87,8 @@ export function SavingsCalculator() {
             <input
               id="monthly-cost"
               type="number"
-              min={1000}
-              max={500000}
+              min={SLIDER_MIN}
+              max={SLIDER_MAX}
               step={500}
               value={inputValue}
               onChange={(e) => {
@@ -89,14 +100,27 @@ export function SavingsCalculator() {
 
             <input
               type="range"
-              min={5000}
-              max={500000}
+              min={SLIDER_MIN}
+              max={SLIDER_MAX}
               step={5000}
               value={monthly}
               onChange={(e) => syncMonthly(Number(e.target.value))}
               className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10"
               aria-label="Adjust monthly cleaning bill"
+              aria-valuemin={SLIDER_MIN}
+              aria-valuemax={SLIDER_MAX}
+              aria-valuenow={monthly}
             />
+            <div className="mt-1 flex justify-between text-xs text-slate-muted">
+              <span>{formatMoney(SLIDER_MIN, currency)}/mo</span>
+              <span>{formatMoney(SLIDER_MAX, currency)}/mo</span>
+            </div>
+            {belowMinimum && (
+              <p className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
+                Typical CleanGrid sites spend at least {formatMoney(MIN_MONTHLY_BILL[currency], currency)}
+                /month on cleaning. Contact us if you are close — we may still fit pilot criteria.
+              </p>
+            )}
 
             <div className="mt-8 space-y-4 border-t border-white/10 pt-8">
               <div className="flex justify-between gap-4">
@@ -165,6 +189,7 @@ export function SavingsCalculator() {
                   {leadMessage}
                 </p>
               )}
+              <PrivacyMicro dark />
             </form>
 
             <CTAButtons className="mt-6" primary="upload" />

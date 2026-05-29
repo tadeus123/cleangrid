@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { submitLead } from '../lib/submitLead'
+import { EligibilityBanner } from './EligibilityBanner'
+import { PrivacyMicro } from './PrivacyMicro'
 
 export function SiteScan() {
   const [email, setEmail] = useState('')
@@ -35,6 +37,7 @@ export function SiteScan() {
           On-site or remote walkthrough. We map zones, access, schedule, and return a written CleanGrid
           offer within 1 business day.
         </p>
+        <EligibilityBanner className="mt-4 text-center" />
         <form onSubmit={handleSubmit} className="mt-10 space-y-4 rounded-xl border border-gray-200 bg-white p-8">
           <input
             type="text"
@@ -81,6 +84,7 @@ export function SiteScan() {
             onChange={(e) => setMessage(e.target.value)}
             className="w-full rounded-md border border-gray-200 px-4 py-2.5 text-sm"
           />
+          <PrivacyMicro />
           <button
             type="submit"
             disabled={status === 'loading'}
