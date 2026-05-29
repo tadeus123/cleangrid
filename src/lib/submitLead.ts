@@ -1,3 +1,5 @@
+import { WHATSAPP_DISPLAY } from '../constants/contact'
+
 export type LeadPayload = {
   type: 'quote' | 'calculator' | 'site-scan'
   email: string
@@ -35,7 +37,10 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitResult> {
     }
     return {
       ok: false,
-      message: data.message ?? data.error ?? 'Something went wrong. Please email sales@cleangrid.com.',
+      message:
+        data.message ??
+        data.error ??
+        `Something went wrong. Message us on WhatsApp (${WHATSAPP_DISPLAY}).`,
     }
   } catch {
     const fallbackKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY as string | undefined
@@ -67,8 +72,7 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitResult> {
     }
     return {
       ok: false,
-      message:
-        'Could not send right now. Email your bill to sales@cleangrid.com or try again in a few minutes.',
+      message: `Could not send right now. Message us on WhatsApp (${WHATSAPP_DISPLAY}) or try again.`,
     }
   }
 }

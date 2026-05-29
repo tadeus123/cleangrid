@@ -1,3 +1,5 @@
+import { WHATSAPP_CHAT_URL, WHATSAPP_DISPLAY } from '../constants/contact'
+
 export function Footer() {
   return (
     <footer className="border-t border-white/5 bg-graphite py-12 pb-24 md:pb-12">
@@ -11,13 +13,18 @@ export function Footer() {
             <p className="text-sm font-medium text-white">Contact</p>
             <ul className="mt-3 space-y-2 text-sm text-slate-muted">
               <li>
-                <a href="mailto:sales@cleangrid.com" className="hover:text-accent">
-                  sales@cleangrid.com
+                <a
+                  href={WHATSAPP_CHAT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-[#25D366]"
+                >
+                  WhatsApp {WHATSAPP_DISPLAY}
                 </a>
               </li>
               <li>
                 <a href="mailto:privacy@cleangrid.com" className="hover:text-accent">
-                  privacy@cleangrid.com
+                  Privacy (legal only)
                 </a>
               </li>
             </ul>

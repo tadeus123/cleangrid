@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: 'Contact',
-    a: 'sales@cleangrid.com · Response within 1 business day on quotes.',
+    a: 'WhatsApp +49 176 44429908 — we reply within 1 business day on quotes.',
   },
 ]
 

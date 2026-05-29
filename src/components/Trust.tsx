@@ -1,3 +1,5 @@
+import { WHATSAPP_CHAT_URL, WHATSAPP_DISPLAY } from '../constants/contact'
+
 const items = [
   'Approved zones only · sensitive areas excluded',
   'Liability & insurance in contract',
@@ -21,8 +23,14 @@ export function Trust() {
           ))}
         </ul>
         <p className="mt-8 text-sm text-slate-muted">
-          <a href="mailto:sales@cleangrid.com" className="text-accent underline">
-            sales@cleangrid.com
+          Questions?{' '}
+          <a
+            href={WHATSAPP_CHAT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#25D366] underline hover:text-teal-300"
+          >
+            WhatsApp {WHATSAPP_DISPLAY}
           </a>
         </p>
       </div>

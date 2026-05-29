@@ -60,7 +60,13 @@ export function Legal() {
             <li>Indicative pricing on this site is not an offer until confirmed in writing.</li>
             <li>Sample dashboards are illustrative unless labeled as live data.</li>
             <li>Deployment timelines depend on site readiness and regulatory approval.</li>
-            <li>Contact: sales@cleangrid.com</li>
+            <li>
+              Contact: WhatsApp +49 176 44429908 (
+              <a href="https://wa.me/4917644429908" className="text-accent-dim underline">
+                chat
+              </a>
+              )
+            </li>
           </ul>
         </div>
       </section>

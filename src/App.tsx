@@ -12,6 +12,7 @@ import { FAQ } from './components/FAQ'
 import { UploadSection } from './components/UploadSection'
 import { Legal } from './components/Legal'
 import { Footer } from './components/Footer'
+import { ContactSidebar, ContactWhatsAppBar } from './components/ContactSidebar'
 import { StickyMobileCTA } from './components/StickyMobileCTA'
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
         <Legal />
       </main>
       <Footer />
+      <ContactSidebar />
+      <ContactWhatsAppBar />
       <StickyMobileCTA />
     </>
   )

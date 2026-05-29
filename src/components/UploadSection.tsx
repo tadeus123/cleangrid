@@ -3,6 +3,7 @@ import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, parseMoneyInput } from '../lib/currency'
 import { fileToBase64, submitLead } from '../lib/submitLead'
+import { WHATSAPP_CHAT_URL, WHATSAPP_DISPLAY } from '../constants/contact'
 import { PrivacyMicro } from './PrivacyMicro'
 
 const BUILDING_TYPES = [
@@ -80,9 +81,14 @@ export function UploadSection() {
             <p className="text-2xl font-bold text-white">Request received</p>
             <p className="mt-4 text-slate-muted">{feedback}</p>
             <p className="mt-4 text-sm text-slate-muted">
-              Questions? Email{' '}
-              <a href="mailto:sales@cleangrid.com" className="text-accent underline">
-                sales@cleangrid.com
+              Questions?{' '}
+              <a
+                href={WHATSAPP_CHAT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#25D366] underline"
+              >
+                WhatsApp {WHATSAPP_DISPLAY}
               </a>
             </p>
           </div>
