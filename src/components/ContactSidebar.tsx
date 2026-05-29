@@ -57,8 +57,6 @@ function QrCard({ label, src, alt }: { label: string; src: string; alt: string }
   )
 }
 
-const ROW = 'h-14 shrink-0'
-
 function StripBtn({
   children,
   href,
