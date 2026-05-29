@@ -1,6 +1,9 @@
 export function StickyMobileCTA() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-graphite/95 p-3 backdrop-blur-md md:hidden">
+    <div
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-graphite/95 p-3 backdrop-blur-md md:hidden"
+      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+    >
       <div className="flex gap-2">
         <a
           href="#calculator"

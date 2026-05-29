@@ -8,9 +8,9 @@ import {
   whatsappQrUrl,
 } from '../constants/contact'
 
-const PANEL_W = 'w-[13.25rem]' // 212px — compact slide-out
-const STRIP_W = 'w-10' // 40px icon rail
-const ROW_H = 'h-11' // 44px — matches channel rows to icons
+const PANEL_W = 'w-[12.5rem]' // 200px
+const STRIP_W = 'w-10'
+const ROW = 'h-10 shrink-0' // 40px rows — fits short viewports
 
 function cx(...parts: (string | false | undefined)[]) {
   return parts.filter(Boolean).join(' ')
@@ -19,7 +19,7 @@ function cx(...parts: (string | false | undefined)[]) {
 function IconQuote({ className }: { className?: string }) {
   return (
     <svg
-      className={cx('block h-[18px] w-[18px] shrink-0', className)}
+      className={cx('block h-[17px] w-[17px] shrink-0', className)}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -35,7 +35,7 @@ function IconQuote({ className }: { className?: string }) {
 function IconWhatsApp({ className }: { className?: string }) {
   return (
     <svg
-      className={cx('block h-[18px] w-[18px] shrink-0', className)}
+      className={cx('block h-[17px] w-[17px] shrink-0', className)}
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden
@@ -48,7 +48,7 @@ function IconWhatsApp({ className }: { className?: string }) {
 function IconWeChat({ className }: { className?: string }) {
   return (
     <svg
-      className={cx('block h-[18px] w-[18px] shrink-0', className)}
+      className={cx('block h-[17px] w-[17px] shrink-0', className)}
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden
@@ -58,13 +58,14 @@ function IconWeChat({ className }: { className?: string }) {
   )
 }
 
-function QrMini({ label, src, alt }: { label: string; src: string; alt: string }) {
+function QrMini({ label, src, alt, size = 'md' }: { label: string; src: string; alt: string; size?: 'md' | 'sm' }) {
+  const img = size === 'sm' ? 'size-14' : 'size-16'
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="rounded bg-white p-1 shadow-sm">
-        <img src={src} alt={alt} width={72} height={72} className="size-[4.25rem] object-contain" />
+    <div className="flex min-w-0 flex-col items-center gap-0.5">
+      <div className="rounded bg-white p-0.5 shadow-sm">
+        <img src={src} alt={alt} width={64} height={64} className={cx(img, 'object-contain')} />
       </div>
-      <span className="max-w-[4.5rem] truncate text-center text-[9px] font-medium uppercase tracking-wide text-slate-muted">
+      <span className="w-full truncate text-center text-[8px] font-medium uppercase tracking-wide text-slate-muted">
         {label}
       </span>
     </div>
@@ -90,9 +91,9 @@ function StripLink({
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
       className={cx(
-        'flex shrink-0 items-center justify-center text-accent transition-colors hover:bg-white/[0.07]',
+        'flex items-center justify-center text-accent transition-colors hover:bg-white/[0.07]',
         STRIP_W,
-        ROW_H,
+        ROW,
         borderBottom && 'border-b border-white/10',
       )}
     >
@@ -120,12 +121,12 @@ function ChannelRow({
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
       className={cx(
-        'flex min-w-0 flex-col justify-center border-b border-white/10 px-3 transition hover:bg-white/[0.04]',
-        ROW_H,
+        'flex min-w-0 flex-col justify-center border-b border-white/10 px-2.5 transition hover:bg-white/[0.04]',
+        ROW,
       )}
     >
-      <span className="text-[9px] font-medium uppercase tracking-wider text-slate-muted">{label}</span>
-      <span className="truncate text-[13px] font-semibold leading-tight text-white">{number}</span>
+      <span className="text-[8px] font-medium uppercase tracking-wider text-slate-muted">{label}</span>
+      <span className="truncate text-xs font-semibold leading-tight text-white">{number}</span>
     </a>
   )
 }
@@ -145,31 +146,31 @@ export function ContactSidebar() {
   return (
     <div
       ref={rootRef}
-      className="fixed right-0 top-1/2 z-50 hidden -translate-y-1/2 md:flex"
+      className="pointer-events-none fixed inset-y-3 right-0 z-50 hidden items-center md:flex"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       aria-label="Contact"
     >
       <div
         className={cx(
-          'flex overflow-hidden rounded-l-lg border border-r-0 border-white/10 bg-graphite-light shadow-xl shadow-black/40',
+          'contact-rail pointer-events-auto flex max-h-[calc(100dvh-1.5rem)] overflow-hidden rounded-l-lg border border-r-0 border-white/10 bg-graphite-light shadow-xl shadow-black/40',
           'transition-[width] duration-300 ease-out',
-          open ? 'w-[calc(13.25rem+2.5rem)]' : STRIP_W,
+          open ? 'w-[calc(12.5rem+2.5rem)]' : STRIP_W,
         )}
       >
-        {/* Slide-out panel */}
+        {/* Panel */}
         <div
           className={cx(
-            'shrink-0 overflow-hidden border-r border-white/10 transition-[width,opacity] duration-300 ease-out',
-            open ? `${PANEL_W} opacity-100` : 'w-0 border-r-0 opacity-0 pointer-events-none',
+            'contact-rail shrink-0 overflow-hidden border-r border-white/10 transition-[width,opacity] duration-300 ease-out',
+            open ? `${PANEL_W} opacity-100` : 'pointer-events-none w-0 border-r-0 opacity-0',
           )}
         >
-          <div className={PANEL_W}>
+          <div className={cx(PANEL_W, 'flex flex-col')}>
             <a
               href="#upload"
               className={cx(
-                'flex items-center justify-center border-b border-white/10 bg-accent/95 text-[10px] font-bold uppercase tracking-wide text-graphite transition hover:bg-teal-400',
-                ROW_H,
+                'flex items-center justify-center border-b border-white/10 bg-accent/95 text-[9px] font-bold uppercase tracking-wide text-graphite transition hover:bg-teal-400',
+                ROW,
               )}
             >
               Get a quote
@@ -183,41 +184,41 @@ export function ContactSidebar() {
             />
             <ChannelRow label="WeChat" number={WECHAT_DISPLAY} href={WECHAT_ADD_URL} title="Add on WeChat" />
 
-            <div className="flex h-[6.625rem] items-center justify-center border-b border-white/10 px-2">
-              <div className="grid w-full grid-cols-2 gap-1.5">
-                <QrMini label="WhatsApp" src={whatsappQrUrl(96)} alt="WhatsApp QR" />
+            <div className={cx('flex items-center justify-center border-b border-white/10 px-1.5', 'h-[5.25rem]')}>
+              <div className="grid w-full grid-cols-2 gap-1">
+                <QrMini label="WhatsApp" src={whatsappQrUrl(88)} alt="WhatsApp QR" />
                 <QrMini label="WeChat" src={WECHAT_QR_SRC} alt="WeChat QR" />
               </div>
             </div>
 
-            <p className="flex h-9 shrink-0 items-center px-3 text-[10px] leading-snug text-slate-muted">
+            <p className={cx('flex items-center px-2.5 text-[9px] leading-snug text-slate-muted', 'h-8')}>
               Reply within 1 business day
             </p>
           </div>
         </div>
 
-        {/* Icon rail — always visible; rows align with panel */}
-        <div className={cx('flex shrink-0 flex-col', STRIP_W)}>
+        {/* Icon rail — height locked to panel (no overflow scroll) */}
+        <div className={cx('contact-rail flex shrink-0 flex-col overflow-hidden', STRIP_W)}>
           <StripLink href="#upload" title="Get a quote">
             <IconQuote />
           </StripLink>
           <StripLink href={WHATSAPP_CHAT_URL} title="WhatsApp">
             <IconWhatsApp />
           </StripLink>
-          <StripLink href={WECHAT_ADD_URL} title="WeChat">
+          <StripLink href={WECHAT_ADD_URL} title="WeChat" borderBottom={false}>
             <IconWeChat />
           </StripLink>
 
           <div
-            className="flex h-[6.625rem] shrink-0 items-center justify-center border-t border-white/10 bg-accent"
+            className="flex h-[5.25rem] shrink-0 items-center justify-center border-t border-white/10 bg-accent"
             aria-hidden
           >
-            <span className="[writing-mode:vertical-rl] rotate-180 text-[9px] font-bold uppercase tracking-[0.2em] text-graphite">
+            <span className="[writing-mode:vertical-rl] rotate-180 text-[8px] font-bold uppercase tracking-[0.18em] text-graphite">
               Contact
             </span>
           </div>
 
-          <div className="h-9 shrink-0" aria-hidden />
+          <div className="h-8 shrink-0" aria-hidden />
         </div>
       </div>
     </div>
@@ -232,33 +233,53 @@ export function ContactWhatsAppBar() {
       {open && (
         <div className="fixed inset-0 z-40 bg-black/60 md:hidden" onClick={() => setOpen(false)} aria-hidden />
       )}
-      <div className="fixed bottom-[4.25rem] right-0 left-0 z-50 md:hidden">
+      <div
+        className="fixed right-0 left-0 z-50 md:hidden"
+        style={{ bottom: 'calc(4.75rem + env(safe-area-inset-bottom, 0px))' }}
+      >
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="mx-3 flex w-[calc(100%-1.5rem)] items-center justify-center gap-2 rounded-lg border border-white/10 bg-graphite-light py-2.5 text-sm text-white"
+          aria-expanded={open}
+          className="mx-3 flex w-[calc(100%-1.5rem)] items-center justify-center gap-2 rounded-lg border border-white/10 bg-graphite-light py-2.5 text-sm text-white shadow-lg"
         >
-          <IconWhatsApp className="text-accent" />
+          <span className="flex items-center gap-1.5 text-accent">
+            <IconWhatsApp />
+            <IconWeChat />
+          </span>
           Contact
         </button>
         {open && (
-          <div className="mx-3 mt-2 space-y-2.5 rounded-xl border border-white/10 bg-graphite-light p-3 shadow-xl">
+          <div className="contact-rail mx-3 mt-2 overflow-hidden rounded-xl border border-white/10 bg-graphite-light p-3 shadow-xl">
             <a
               href="#upload"
-              className="block rounded-md bg-accent py-2.5 text-center text-xs font-bold uppercase text-graphite"
+              className="mb-2 block rounded-md bg-accent py-2.5 text-center text-xs font-bold uppercase text-graphite"
             >
               Get a quote
             </a>
-            <a href={WHATSAPP_CHAT_URL} target="_blank" rel="noopener noreferrer" className="block text-center text-sm text-white">
-              WhatsApp · {WHATSAPP_DISPLAY}
-            </a>
-            <a href={WECHAT_ADD_URL} className="block text-center text-sm text-white">
-              WeChat · {WECHAT_DISPLAY}
-            </a>
-            <div className="grid grid-cols-2 gap-3 px-1">
-              <QrMini label="WhatsApp" src={whatsappQrUrl(96)} alt="WhatsApp" />
-              <QrMini label="WeChat" src={WECHAT_QR_SRC} alt="WeChat" />
+            <div className="grid grid-cols-2 gap-2">
+              <a
+                href={WHATSAPP_CHAT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-lg border border-white/10 px-2 py-2 text-center transition hover:bg-white/[0.04]"
+              >
+                <span className="block text-[9px] uppercase tracking-wide text-slate-muted">WhatsApp</span>
+                <span className="mt-0.5 block text-xs font-semibold text-white">{WHATSAPP_DISPLAY}</span>
+              </a>
+              <a
+                href={WECHAT_ADD_URL}
+                className="rounded-lg border border-white/10 px-2 py-2 text-center transition hover:bg-white/[0.04]"
+              >
+                <span className="block text-[9px] uppercase tracking-wide text-slate-muted">WeChat</span>
+                <span className="mt-0.5 block text-xs font-semibold text-white">{WECHAT_DISPLAY}</span>
+              </a>
             </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <QrMini label="WhatsApp" src={whatsappQrUrl(88)} alt="WhatsApp" size="sm" />
+              <QrMini label="WeChat" src={WECHAT_QR_SRC} alt="WeChat" size="sm" />
+            </div>
+            <p className="mt-2 text-center text-[10px] text-slate-muted">Reply within 1 business day</p>
           </div>
         )}
       </div>
