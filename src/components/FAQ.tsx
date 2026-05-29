@@ -26,6 +26,10 @@ const faqs = [
     a: 'Cleaning zones, camera use, retention, and access are agreed before go-live. Sensitive areas can be excluded. We support GDPR-aligned processing for EU sites.',
   },
   {
+    q: 'How does the map estimate work?',
+    a: 'You search your building; we read the footprint from OpenStreetMap (satellite map data). We estimate cleanable area, floors, and apply industry €/m² benchmarks. You see a range — not a binding price. Upload your cleaning bill to lock 10% of your real spend.',
+  },
+  {
     q: 'How is pricing calculated?',
     a: 'Primary: 10% of your current monthly cleaning invoice (after we validate scope). Benchmark: from €99 / $108 / £85 per 1,000 m² per scheduled visit depending on currency. You receive the lower applicable written quote after site scan.',
   },

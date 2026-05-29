@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CTAButtons } from './CTAButtons'
 
 const navLinks = [
+  { href: '#map-estimate', label: 'Estimate' },
   { href: '#calculator', label: 'Savings' },
   { href: '#how', label: 'How it works' },
   { href: '#proof', label: 'Reports' },

@@ -1,5 +1,5 @@
 import { Header } from './components/Header'
-import { Hero } from './components/Hero'
+import { BuildingMapEstimator } from './components/BuildingMapEstimator'
 import { SavingsCalculator } from './components/SavingsCalculator'
 import { NoOwnership } from './components/NoOwnership'
 import { Process } from './components/Process'
@@ -22,7 +22,7 @@ function App() {
     <>
       <Header />
       <main>
-        <Hero />
+        <BuildingMapEstimator />
         <SavingsCalculator />
         <NoOwnership />
         <Process />

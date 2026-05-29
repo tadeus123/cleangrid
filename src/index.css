@@ -58,3 +58,9 @@ body {
 input[type='range'] {
   accent-color: var(--color-accent);
 }
+
+.leaflet-container {
+  z-index: 0;
+  font-family: inherit;
+  background: #0c0e12;
+}

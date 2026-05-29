@@ -29,6 +29,7 @@ npm run preview
 
 ## Features
 
+- **Map estimator** — search a building, read footprint from OpenStreetMap, instant savings ballpark (optional OpenAI refinement)
 - Savings calculator with EUR / USD / GBP
 - Multi-step quote upload with file attachment
 - Site scan booking, calculator lead capture
