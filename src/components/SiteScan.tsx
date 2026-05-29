@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { submitLead } from '../lib/submitLead'
+import { submitLead } from '../lib/leads'
 import { PrivacyMicro } from './PrivacyMicro'
 
 export function SiteScan() {

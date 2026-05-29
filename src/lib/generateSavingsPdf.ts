@@ -66,45 +66,51 @@ export function downloadSavingsPdf(input: SavingsPdfInput): void {
   doc.text(doc.splitTextToSize(headline, 170), 20, y)
   y += 14
 
-  const row = (label: string, left: string, right: string, accentRight = false) => {
-    doc.setFillColor(...C.panel)
-    doc.roundedRect(20, y, 170, 13, 2, 2, 'F')
-    doc.setFontSize(8)
-    doc.setTextColor(...C.muted)
-    doc.text(label, 24, y + 5)
-    doc.setFontSize(11)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(...C.ink)
-    doc.text(left, 24, y + 11)
-    doc.setTextColor(...(accentRight ? C.accent : C.ink))
-    doc.text(right, 115, y + 11)
-    doc.setFont('helvetica', 'normal')
-    y += 16
-  }
+  doc.setFillColor(...C.panel)
+  doc.roundedRect(20, y, 170, 48, 3, 3, 'F')
 
-  doc.setFontSize(7)
+  doc.setFontSize(8)
   doc.setTextColor(...C.muted)
-  doc.text('YOUR CONTRACT TODAY', 24, y)
-  doc.text('WITH CLEANGRID', 115, y)
-  y += 5
+  doc.text('YOU PAY TODAY (cleaning)', 26, y + 9)
+  doc.text('WITH CLEANGRID', 108, y + 9)
 
-  row(
-    'Monthly cleaning',
-    formatMoney(input.monthlyCurrent, input.currency),
-    formatMoney(input.monthlyCleanGrid, input.currency),
-    true,
-  )
-  row('Monthly savings', '—', formatMoney(input.monthlySave, input.currency), true)
-  row('Annual savings', '—', formatMoney(input.yearlySave, input.currency), true)
-  row('5-year savings', '—', formatMoney(fiveYearSave, input.currency), true)
+  doc.setFontSize(16)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(...C.ink)
+  doc.text(formatMoney(input.monthlyCurrent, input.currency), 26, y + 20)
+  doc.setTextColor(...C.accent)
+  doc.text(formatMoney(input.monthlyCleanGrid, input.currency), 108, y + 20)
+
+  doc.setDrawColor(220, 225, 230)
+  doc.setLineWidth(0.3)
+  doc.line(26, y + 26, 184, y + 26)
+
+  doc.setFontSize(8)
+  doc.setTextColor(...C.muted)
+  doc.setFont('helvetica', 'normal')
+  doc.text('YOU SAVE / MONTH', 26, y + 33)
+  doc.text('YOU SAVE / YEAR', 108, y + 33)
+
+  doc.setFontSize(13)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(...C.accent)
+  doc.text(formatMoney(input.monthlySave, input.currency), 26, y + 41)
+  doc.text(formatMoney(input.yearlySave, input.currency), 108, y + 41)
+
+  doc.setFontSize(8)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(...C.muted)
+  doc.text(`5-year savings: ${formatMoney(fiveYearSave, input.currency)}`, 26, y + 46)
+
+  y += 56
 
   doc.setFillColor(...C.accent)
-  doc.roundedRect(20, y, 170, 14, 2, 2, 'F')
+  doc.roundedRect(20, y, 170, 12, 2, 2, 'F')
   doc.setTextColor(...C.graphite)
-  doc.setFontSize(11)
+  doc.setFontSize(10)
   doc.setFont('helvetica', 'bold')
-  doc.text(`You keep ~${pct}% of today's cleaning budget.`, 24, y + 9)
-  y += 22
+  doc.text(`You keep ~${pct}% of today's cleaning budget.`, 24, y + 8)
+  y += 20
 
   doc.setTextColor(...C.ink)
   doc.setFontSize(12)

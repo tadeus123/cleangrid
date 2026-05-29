@@ -1,37 +1,32 @@
 # CleanGrid
 
-Landing site for **Cleanliness-as-a-Service** — fully managed robotic cleaning for large buildings.
+Landing site for CleanGrid — fully managed humanoid robotic cleaning for large buildings.
 
-**Live:** https://cleangrid.vercel.app/
-
-## Run locally
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Deploy (Vercel)
+## Environment variables
 
-1. Push to GitHub and import in Vercel.
-2. Add environment variable:
-   - `WEB3FORMS_ACCESS_KEY` — get a free key at [web3forms.com](https://web3forms.com) (restrict to your domain).
-3. Optional client fallback: `VITE_WEB3FORMS_ACCESS_KEY` (same key; used if `/api/lead` is unavailable in dev).
+Create `.env` from `.env.example`:
 
-Forms submit to `/api/lead`, which forwards to Web3Forms and emails your inbox.
+| Variable | Description |
+|----------|-------------|
+| `VITE_SUPABASE_URL` | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon (public) key |
 
-## Build
+Set the same on **Vercel → Settings → Environment Variables**.
 
-```bash
-npm run build
-npm run preview
-```
+## Supabase setup
 
-## Features
+1. Create a project at [supabase.com](https://supabase.com)
+2. Open **SQL Editor** and run the full script in [`supabase/schema.sql`](supabase/schema.sql)
+3. Copy **Project URL** and **anon key** into `.env` and Vercel
+4. Leads appear in **Table Editor → leads**; invoices in **Storage → invoices**
 
-- **Map estimator** — search a building, read footprint from OpenStreetMap, instant savings ballpark (optional OpenAI refinement)
-- Savings calculator with EUR / USD / GBP
-- Multi-step quote upload with file attachment
-- Site scan booking, calculator lead capture
-- Performance guarantee, FAQ, privacy & terms
-- Mobile nav + sticky CTAs
+## Deploy
+
+Push to `main` — Vercel deploys automatically.

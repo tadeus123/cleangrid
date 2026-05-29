@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, parseMoneyInput } from '../lib/currency'
-import { fileToBase64, submitLead } from '../lib/submitLead'
+import { submitLead } from '../lib/leads'
 import { WHATSAPP_CHAT_URL, WHATSAPP_DISPLAY } from '../constants/contact'
 import { PrivacyMicro } from './PrivacyMicro'
 
@@ -42,16 +42,6 @@ export function UploadSection() {
     if (!email || !company) return
     setStatus('loading')
 
-    let fileBase64: string | undefined
-    if (file) {
-      if (file.size > 25 * 1024 * 1024) {
-        setStatus('error')
-        setFeedback('File must be under 25 MB.')
-        return
-      }
-      fileBase64 = await fileToBase64(file)
-    }
-
     const result = await submitLead({
       type: 'quote',
       email,
@@ -62,10 +52,10 @@ export function UploadSection() {
       country: country || undefined,
       cleanableAreaSqm: areaSqm ? parseMoneyInput(areaSqm) : undefined,
       monthlyBill: billNum || undefined,
+      monthlyCleanGrid: estimated || undefined,
       currency,
-      message: contractEnd ? `Current contract ends: ${contractEnd}` : undefined,
-      fileName: file?.name,
-      fileBase64,
+      contractEnd: contractEnd || undefined,
+      file: file ?? undefined,
     })
 
     setStatus(result.ok ? 'done' : 'error')

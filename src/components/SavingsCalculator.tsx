@@ -2,9 +2,8 @@ import { useMemo, useState } from 'react'
 import { CurrencySelect } from './CurrencySelect'
 import { useCurrency } from '../context/CurrencyContext'
 import { formatMoney, parseMoneyInput } from '../lib/currency'
-import { submitLead } from '../lib/submitLead'
+import { submitLead } from '../lib/leads'
 import { PrivacyMicro } from './PrivacyMicro'
-import { MIN_MONTHLY_BILL } from '../constants/eligibility'
 
 const SLIDER_MIN = 5_000
 const SLIDER_MAX = 500_000
@@ -64,8 +63,10 @@ export function SavingsCalculator() {
         email: email.trim(),
         company: company.trim(),
         monthlyBill: monthly,
+        monthlyCleanGrid: cleanGrid,
+        monthlySavings: monthlySave,
+        yearlySavings: yearlySave,
         currency,
-        message: `CleanGrid ${formatMoney(cleanGrid, currency)}/mo · save ${formatMoney(yearlySave, currency)}/yr`,
       })
       if (result.ok) {
         message += ' We received your details and will follow up within 1 business day.'
@@ -139,13 +140,6 @@ export function SavingsCalculator() {
               <p className="text-2xl font-bold text-white">{formatMoney(yearlySave, currency)}</p>
             </div>
           </div>
-
-          {monthly < MIN_MONTHLY_BILL[currency] && (
-            <p className="mt-4 text-xs text-amber-300/90">
-              Typical sites spend {formatMoney(MIN_MONTHLY_BILL[currency], currency)}+/month — contact us if
-              you&apos;re close.
-            </p>
-          )}
 
           <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row">
             <input

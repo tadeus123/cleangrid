@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   WHATSAPP_CHAT_URL,
   WHATSAPP_DISPLAY,
@@ -31,168 +31,192 @@ function IconWeChat({ className = 'h-5 w-5' }: { className?: string }) {
   )
 }
 
-function IconQr({ className = 'h-5 w-5' }: { className?: string }) {
+function QrFrame({ label, icon, src, alt }: { label: string; icon: ReactNode; src: string; alt: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <path d="M14 14h3v3M17 17h4v4M14 20h3" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-const rowClass =
-  'flex items-center gap-3 border-b border-white/8 px-4 py-3.5 text-sm text-white transition hover:bg-white/[0.04]'
-
-function QrCard({
-  label,
-  icon,
-  src,
-  alt,
-}: {
-  label: string
-  icon: ReactNode
-  src: string
-  alt: string
-}) {
-  return (
-    <div className="mx-3 mb-3 overflow-hidden rounded-lg border border-white/12 bg-graphite shadow-inner">
-      <div className="flex items-center gap-2 border-b border-white/8 bg-white/[0.04] px-3 py-2">
+    <div className="overflow-hidden rounded-lg border border-white/12 bg-graphite">
+      <div className="flex items-center gap-2 border-b border-white/8 px-3 py-2">
         {icon}
         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-muted">{label}</span>
       </div>
-      <div className="flex justify-center bg-gradient-to-b from-white to-gray-100 p-3">
-        <div className="rounded-md border border-gray-200/80 bg-white p-2 shadow-sm">
-          <img src={src} alt={alt} width={112} height={112} className="block size-28 object-contain" />
+      <div className="flex justify-center bg-gradient-to-b from-slate-50 to-slate-100 p-3">
+        <div className="rounded-lg border border-slate-200/90 bg-white p-2.5 shadow-md ring-1 ring-black/5">
+          <img src={src} alt={alt} width={104} height={104} className="block size-[6.5rem] object-contain" />
         </div>
       </div>
+    </div>
+  )
+}
+
+type PanelId = 'quote' | 'whatsapp' | 'wechat'
+
+const ROW_H = 'h-14'
+
+function FlyoutPanel({
+  open,
+  children,
+  className = 'w-[15rem]',
+}: {
+  open: boolean
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={`absolute right-full top-0 z-10 mr-1 overflow-hidden rounded-lg border border-white/12 bg-graphite-light shadow-2xl transition-all duration-150 ${className} ${
+        open ? 'visible translate-x-0 opacity-100' : 'invisible translate-x-2 opacity-0 pointer-events-none'
+      }`}
+    >
+      {children}
+    </div>
+  )
+}
+
+function StripRow({
+  id,
+  active,
+  setActive,
+  icon,
+  label,
+  panel,
+  href,
+  onClick,
+}: {
+  id: PanelId
+  active: PanelId | null
+  setActive: (id: PanelId | null) => void
+  icon: ReactNode
+  label: string
+  panel: ReactNode
+  href?: string
+  onClick?: () => void
+}) {
+  const open = active === id
+  const inner = (
+    <>
+      <FlyoutPanel open={open}>{panel}</FlyoutPanel>
+      <span
+        className={`flex ${ROW_H} w-12 items-center justify-center border-b border-white/10 text-accent transition hover:bg-white/5 ${
+          open ? 'bg-white/5' : ''
+        }`}
+        title={label}
+      >
+        {icon}
+      </span>
+    </>
+  )
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setActive(id)}
+      onMouseLeave={() => setActive(null)}
+      onFocus={() => setActive(id)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setActive(null)
+      }}
+    >
+      {href ? (
+        <a href={href} className="block">
+          {inner}
+        </a>
+      ) : (
+        <button type="button" className="block w-full" onClick={onClick}>
+          {inner}
+        </button>
+      )}
     </div>
   )
 }
 
 export function ContactSidebar() {
-  const rootRef = useRef<HTMLDivElement>(null)
-  const [open, setOpen] = useState(false)
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
-
-  useEffect(() => {
-    if (!open) return
-    const onPointerDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    return () => document.removeEventListener('pointerdown', onPointerDown)
-  }, [open])
-
-  const show = (next: boolean) => setOpen(next)
+  const [active, setActive] = useState<PanelId | null>(null)
 
   return (
     <div
-      ref={rootRef}
-      className="fixed right-0 top-1/2 z-50 hidden -translate-y-1/2 md:flex"
-      onMouseEnter={() => show(true)}
-      onMouseLeave={() => show(false)}
-      aria-label="Contact"
+      className="fixed right-0 top-1/2 z-50 hidden -translate-y-1/2 md:block"
+      aria-label="Contact shortcuts"
     >
-      <div
-        className={`flex overflow-hidden border border-r-0 border-white/10 bg-graphite-light shadow-2xl transition-[width,opacity] duration-200 ease-out ${
-          open ? 'w-[15.5rem] opacity-100' : 'w-0 opacity-0'
-        }`}
-      >
-        <div className="w-[15.5rem] shrink-0 py-1">
-          <a href="#upload" className={`${rowClass} font-semibold text-accent hover:text-teal-300`}>
-            <IconQuote className="h-5 w-5 shrink-0" />
-            Get a quote
-          </a>
-
-          <a
-            href={WHATSAPP_CHAT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={rowClass}
-          >
-            <IconWhatsApp className="h-5 w-5 shrink-0 text-accent" />
-            <span className="leading-tight">
-              <span className="block text-[10px] uppercase tracking-wider text-slate-muted">
-                WhatsApp
-              </span>
-              {WHATSAPP_DISPLAY}
-            </span>
-          </a>
-
-          <QrCard
-            label="Scan · WhatsApp"
-            icon={<IconQr className="h-4 w-4 text-accent" />}
-            src={whatsappQrUrl(140)}
-            alt="WhatsApp QR code"
-          />
-          <QrCard
-            label="Scan · WeChat"
-            icon={<IconWeChat className="h-4 w-4 text-accent" />}
-            src={WECHAT_QR_SRC}
-            alt="WeChat QR code"
-          />
-        </div>
-      </div>
-
-      <div className="flex w-12 flex-col border border-white/10 bg-graphite-light">
-        <button
-          type="button"
-          onClick={() => show(!open)}
-          className="flex flex-1 flex-col items-center justify-center gap-1.5 border-b border-white/10 bg-accent py-4 text-[9px] font-bold uppercase leading-tight tracking-wider text-graphite"
-          aria-expanded={open}
-        >
-          <span className="[writing-mode:vertical-rl] rotate-180">Contact</span>
-        </button>
-        <a
+      <div className="flex flex-col overflow-hidden rounded-l-lg border border-r-0 border-white/10 bg-graphite-light shadow-xl">
+        <StripRow
+          id="quote"
+          active={active}
+          setActive={setActive}
           href="#upload"
-          title="Get a quote"
-          className="flex flex-col items-center justify-center gap-1 border-b border-white/10 py-3.5 text-accent transition hover:bg-white/5"
-        >
-          <IconQuote className="h-5 w-5" />
-        </a>
-        <a
-          href={WHATSAPP_CHAT_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="WhatsApp"
-          className="flex flex-col items-center justify-center gap-1 border-b border-white/10 py-3.5 text-accent transition hover:bg-white/5"
-        >
-          <IconWhatsApp className="h-5 w-5" />
-        </a>
-        <button
-          type="button"
-          onClick={() => show(true)}
-          title="WeChat QR"
-          className="flex flex-col items-center justify-center gap-1 py-3.5 text-accent transition hover:bg-white/5"
-        >
-          <IconWeChat className="h-5 w-5" />
-        </button>
+          label="Get a quote"
+          icon={<IconQuote className="h-5 w-5" />}
+          panel={
+            <div className="p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-accent">Get a quote</p>
+              <p className="mt-2 text-sm text-white">Upload your cleaning bill for a written 10% price.</p>
+              <a
+                href="#upload"
+                className="mt-3 inline-block rounded-md bg-accent px-4 py-2 text-xs font-bold uppercase text-graphite"
+              >
+                Upload bill
+              </a>
+            </div>
+          }
+        />
+        <StripRow
+          id="whatsapp"
+          active={active}
+          setActive={setActive}
+          label="WhatsApp"
+          icon={<IconWhatsApp className="h-5 w-5" />}
+          panel={
+            <div className="w-[15.5rem] space-y-3 p-3">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-muted">WhatsApp</p>
+                <a
+                  href={WHATSAPP_CHAT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 block text-base font-semibold text-white hover:text-accent"
+                >
+                  {WHATSAPP_DISPLAY}
+                </a>
+              </div>
+              <QrFrame
+                label="Scan to chat"
+                icon={<IconWhatsApp className="h-4 w-4 text-accent" />}
+                src={whatsappQrUrl(140)}
+                alt="WhatsApp QR"
+              />
+            </div>
+          }
+        />
+        <StripRow
+          id="wechat"
+          active={active}
+          setActive={setActive}
+          label="WeChat"
+          icon={<IconWeChat className="h-5 w-5" />}
+          panel={
+            <div className="w-[15.5rem] p-3">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-muted">
+                WeChat
+              </p>
+              <QrFrame
+                label="Scan to add"
+                icon={<IconWeChat className="h-4 w-4 text-accent" />}
+                src={WECHAT_QR_SRC}
+                alt="WeChat QR"
+              />
+            </div>
+          }
+        />
       </div>
     </div>
   )
 }
 
-/** Mobile: single tap opens full contact sheet */
 export function ContactWhatsAppBar() {
   const [open, setOpen] = useState(false)
 
   return (
     <>
       {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 md:hidden"
-          onClick={() => setOpen(false)}
-          aria-hidden
-        />
+        <div className="fixed inset-0 z-40 bg-black/60 md:hidden" onClick={() => setOpen(false)} aria-hidden />
       )}
       <div className="fixed bottom-[4.25rem] right-0 left-0 z-50 md:hidden">
         <button
@@ -201,15 +225,11 @@ export function ContactWhatsAppBar() {
           className="mx-3 flex w-[calc(100%-1.5rem)] items-center justify-center gap-2 rounded-lg border border-white/10 bg-graphite-light py-2.5 text-sm text-white"
         >
           <IconWhatsApp className="h-4 w-4 text-accent" />
-          Contact · WhatsApp · WeChat
+          Quote · WhatsApp · WeChat
         </button>
         {open && (
-          <div className="mx-3 mt-2 overflow-hidden rounded-lg border border-white/10 bg-graphite-light shadow-xl">
-            <a
-              href="#upload"
-              onClick={() => setOpen(false)}
-              className={`${rowClass} text-accent`}
-            >
+          <div className="mx-3 mt-2 space-y-2 rounded-lg border border-white/10 bg-graphite-light p-3 shadow-xl">
+            <a href="#upload" onClick={() => setOpen(false)} className="flex items-center gap-2 text-accent">
               <IconQuote className="h-5 w-5" />
               Get a quote
             </a>
@@ -217,25 +237,23 @@ export function ContactWhatsAppBar() {
               href={WHATSAPP_CHAT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className={rowClass}
+              className="flex items-center gap-2 text-white"
             >
               <IconWhatsApp className="h-5 w-5 text-accent" />
               {WHATSAPP_DISPLAY}
             </a>
-            <div className="space-y-2 p-2">
-              <QrCard
-                label="WhatsApp"
-                icon={<IconWhatsApp className="h-4 w-4 text-accent" />}
-                src={whatsappQrUrl(120)}
-                alt="WhatsApp"
-              />
-              <QrCard
-                label="WeChat"
-                icon={<IconWeChat className="h-4 w-4 text-accent" />}
-                src={WECHAT_QR_SRC}
-                alt="WeChat"
-              />
-            </div>
+            <QrFrame
+              label="WhatsApp"
+              icon={<IconWhatsApp className="h-4 w-4 text-accent" />}
+              src={whatsappQrUrl(120)}
+              alt="WhatsApp"
+            />
+            <QrFrame
+              label="WeChat"
+              icon={<IconWeChat className="h-4 w-4 text-accent" />}
+              src={WECHAT_QR_SRC}
+              alt="WeChat"
+            />
           </div>
         )}
       </div>
