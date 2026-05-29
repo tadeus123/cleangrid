@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --color-graphite: #0c0e12;
+  --color-graphite-light: #161a22;
+  --color-slate-muted: #6b7280;
+  --color-accent: #14b8a6;
+  --color-accent-dim: #0d9488;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(20, 184, 166, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.hero-path {
+  stroke: rgba(20, 184, 166, 0.35);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 6 8;
+  animation: path-flow 24s linear infinite;
+}
+
+@keyframes path-flow {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+
+.report-glow {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 24px 80px rgba(0, 0, 0, 0.5);
+}
