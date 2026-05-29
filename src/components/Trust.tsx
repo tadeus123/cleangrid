@@ -28,7 +28,7 @@ export function Trust() {
             href={WHATSAPP_CHAT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#25D366] underline hover:text-teal-300"
+            className="text-accent underline hover:text-teal-300"
           >
             WhatsApp {WHATSAPP_DISPLAY}
           </a>

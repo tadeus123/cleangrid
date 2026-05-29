@@ -86,7 +86,7 @@ export function UploadSection() {
                 href={WHATSAPP_CHAT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#25D366] underline"
+                className="text-accent underline hover:text-teal-300"
               >
                 WhatsApp {WHATSAPP_DISPLAY}
               </a>

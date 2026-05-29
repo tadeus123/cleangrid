@@ -21,7 +21,7 @@ export function Hero() {
           </p>
 
           <h1 className="font-serif text-[1.75rem] font-normal leading-[1.2] tracking-tight text-white md:text-4xl lg:text-[2.65rem]">
-            Fully managed robotic cleaning from{' '}
+            Affordable robotic cleaning from{' '}
             <span className="text-accent">
               ${HERO_USD_PRICE.toFixed(2)} {HERO_USD_UNIT}
             </span>{' '}

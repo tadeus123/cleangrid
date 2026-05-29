@@ -17,7 +17,7 @@ export function Footer() {
                   href={WHATSAPP_CHAT_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-[#25D366]"
+                  className="inline-flex items-center gap-2 hover:text-accent"
                 >
                   WhatsApp {WHATSAPP_DISPLAY}
                 </a>
